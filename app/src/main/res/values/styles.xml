@@ -10,6 +10,11 @@
 
     </style>
 
+    <style name="Theme.AppStartLoadTranslucent" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <style name="AnimationActivity">
         <item name="android:activityOpenEnterAnimation">@anim/slide_right_in</item>
         <item name="android:activityOpenExitAnimation">@anim/slide_left_out</item>

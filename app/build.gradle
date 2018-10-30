@@ -15,15 +15,15 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('keystore.jks')
+//            storeFile file('keystore.jks')
 //            storePassword "cn.xdf.lespeaking_android"
-            keyAlias "lespeaking"
+//            keyAlias "lespeaking"
 //            keyPassword "cn.xdf.lespeaking_android"
         }
         release {
-            storeFile file('keystore.jks')
+//            storeFile file('keystore.jks')
 //            storePassword "cn.xdf.lespeaking_android"
-            keyAlias "lespeaking"
+//            keyAlias "lespeaking"
 //            keyPassword "cn.xdf.lespeaking_android"
         }
     }
@@ -35,7 +35,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             android.applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "lespeaking_${variant.productFlavors[0].name}_v${variant.versionName}.apk"
+                    outputFileName = "diyue_${variant.productFlavors[0].name}_v${variant.versionName}.apk"
                 }
             }
         }
@@ -74,6 +74,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
 
     implementation 'com.android.support:multidex:1.0.3'
 

@@ -9,6 +9,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.diyuewang.m.R;
+import com.diyuewang.m.tools.helper.AccountUtil;
 import com.diyuewang.m.tools.helper.IntentManager;
 
 
@@ -45,7 +46,8 @@ public class SplashActivity extends AppCompatActivity {
                 } else {
                     AccountHelper.startApp(SplashActivity.this);
                 }*/
-                IntentManager.startMainActivity(SplashActivity.this);
+                AccountUtil.startApp(SplashActivity.this);
+//                IntentManager.startMainActivity(SplashActivity.this);
                 SplashActivity.this.finish();
             }
         }, SPLASH_DISPLAY_LENGHT);
