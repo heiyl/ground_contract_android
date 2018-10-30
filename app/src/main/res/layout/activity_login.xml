@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="72dp"
+            android:background="@mipmap/ic_launcher_round" />
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginRight="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@drawable/edt_white_bg_cornors_50"
+            android:cursorVisible="true"
+            android:hint="@string/account_login_edit_phone_hint"
+            android:imeOptions="actionNext"
+            android:inputType="phone"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:singleLine="true"
+            android:textColor="#000"
+            android:textColorHint="#c0c6cc"
+            android:textSize="@dimen/app_font_size_14" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            android:layout_marginLeft="@dimen/dp_30"
+            android:layout_marginRight="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_20"
+            android:background="@drawable/edt_white_bg_cornors_50"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rl_smscode"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <android.support.v7.widget.AppCompatEditText
+                    android:id="@+id/edt_sms_code"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:cursorVisible="true"
+                    android:hint="@string/account_login_edit_code_hint"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="10dp"
+                    android:singleLine="true"
+                    android:textColorHint="#c0c6cc"
+                    android:textSize="@dimen/app_font_size_14" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/color_cccccc" />
+
+            <TextView
+                android:id="@+id/tv_get_sms_code"
+                android:layout_width="100dp"
+                android:layout_height="@dimen/dp_44"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/dp_10"
+                android:gravity="center"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:text="@string/account_login_get_phone_code"
+                android:textColor="@color/color_ff6161"
+                android:textSize="@dimen/app_font_size_14" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_44"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/btn_red_bg"
+            android:enabled="false"
+            android:gravity="center"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="@string/account_login_title"
+            android:textColor="@color/white"
+            android:textColorHint="@color/color_ff6161"
+            android:textSize="@dimen/app_font_size_18" />
+
+    </LinearLayout>
+</ScrollView>
