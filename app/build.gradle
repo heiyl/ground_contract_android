@@ -15,16 +15,16 @@ android {
     }
     signingConfigs {
         debug {
-//            storeFile file('keystore.jks')
-//            storePassword "cn.xdf.lespeaking_android"
-//            keyAlias "lespeaking"
-//            keyPassword "cn.xdf.lespeaking_android"
+            storeFile file('keystore.jks')
+            storePassword "diyuewang1031"
+            keyAlias "diyuewang"
+            keyPassword "diyuewang1031"
         }
         release {
-//            storeFile file('keystore.jks')
-//            storePassword "cn.xdf.lespeaking_android"
-//            keyAlias "lespeaking"
-//            keyPassword "cn.xdf.lespeaking_android"
+            storeFile file('keystore.jks')
+            storePassword "diyuewang1031"
+            keyAlias "diyuewang"
+            keyPassword "diyuewang1031"
         }
     }
 
@@ -54,12 +54,12 @@ android {
         }
     }
     productFlavors {
-        lespeaking_test_self {
+        diyue_test_self {
             buildConfigField "String", "API_ENV", "\"TEST\""
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "self"]
         }
 
-        lespeaking_prod_self {
+        diyue_prod_self {
             buildConfigField "String", "API_ENV", "\"PROD\""
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "self"]
         }
