@@ -4,8 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.common.library.tools.ActivityStackManager;
+import com.common.library.tools.FileUtils;
+import com.common.library.tools.aes.AESOperator;
 import com.common.library.tools.helper.AccountHelper;
+import com.diyuewang.m.BaseApplicaiton;
 import com.diyuewang.m.MainActivity;
+import com.diyuewang.m.model.Employee;
+import com.diyuewang.m.model.UserDto;
+import com.diyuewang.m.tools.LogManager;
+import com.diyuewang.m.tools.UIUtils;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import cn.finalteam.okhttpfinal.RequestParams;
 
@@ -28,15 +37,77 @@ public class AccountUtil {
         boolean logOut = AccountHelper.logOut(context);
         if(logOut){
             //TODO 常驻数据修改
+            BaseApplicaiton.loginUserDto = null;
             ActivityStackManager.getInstance().finishToActivity(MainActivity.class, true);
             IntentManager.startLoginActivity(context);
         }
     }
-    public static void saveLoginuserDto(String content, Context context) throws Exception {
+    public static boolean saveLoginuserDto(String content, Context context) throws Exception {
         boolean save = AccountHelper.saveLoginuserDto(content,context);
         if(save){
-            //TODO 常驻数据修改
+            try {
+                Gson gson = new Gson();
+                BaseApplicaiton.loginUserDto = gson.fromJson(content, UserDto.class);
+            } catch (JsonSyntaxException e) {
+                LogManager.e("saveLoginuserDto", e.toString());
+            }
+
         }
+        return save;
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @return
+     */
+    public static Employee getEmployee() {
+        Employee userInfo = null;
+        if (getLoginUserDto() != null && getLoginUserDto().data != null && getLoginUserDto().data.employee != null) {
+            userInfo = getLoginUserDto().data.employee;
+        }
+        return userInfo;
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @return
+     */
+    public static String getUserId() {
+        String userId = "";
+        Employee userInfo = null;
+        if (getEmployee() != null) {
+            userId = getEmployee().id;
+        }
+        return userId;
+    }
+
+    /**
+     * 获取登录信息
+     *
+     * @return
+     */
+    public static UserDto getLoginUserDto() {
+        if (BaseApplicaiton.loginUserDto == null) {
+            try {
+                String auth = FileUtils.readFile(FileUtils.getAuthPath(UIUtils.getContext()));//解密前的auth
+                if (auth != null) {
+//                    String authafter = AESUtils.decrypt(AESUtils.PASSWORD, auth);// 解密后的auth
+                    String authafter = AESOperator.decrypt(auth, AESOperator.PASSWORD, AESOperator.PASSWORD);
+                    try {
+                        Gson gson = new Gson();
+                        BaseApplicaiton.loginUserDto = gson.fromJson(authafter, UserDto.class);
+                    } catch (JsonSyntaxException e) {
+                        LogManager.e("getLoginUserDto", e.toString());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return BaseApplicaiton.loginUserDto;
     }
 
 
@@ -62,11 +133,11 @@ public class AccountUtil {
      * @param context
      */
     public static void startApp(Context context) {
-        /*if (AccountUtil.isLogin(context)) {
+        if (AccountUtil.isLogin(context)) {
             IntentManager.startMainActivity(context);
         } else {
             IntentManager.startLoginActivity(context);
-        }*/
-        IntentManager.startMainActivity(context);
+        }
+//        IntentManager.startMainActivity(context);
     }
 }

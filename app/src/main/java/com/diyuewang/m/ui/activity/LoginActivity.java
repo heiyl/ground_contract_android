@@ -16,8 +16,12 @@ import com.common.library.model.ResultDto;
 import com.diyuewang.m.R;
 import com.diyuewang.m.base.BaseToolBarActivity;
 import com.diyuewang.m.constants.API;
+import com.diyuewang.m.constants.Constants;
+import com.diyuewang.m.model.UserDto;
 import com.diyuewang.m.tools.UIUtils;
+import com.diyuewang.m.tools.helper.AccountUtil;
 import com.diyuewang.m.tools.helper.SmsUtil;
+import com.google.gson.Gson;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -153,10 +157,10 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
         String sms = edtSmsCode.getText().toString().trim();
 
         RequestParams params = new RequestParams();
-        params.addFormDataPart("phoneNum", mPhone);
-        params.addFormDataPart("verificationCode", sms);
+        params.addFormDataPart("phone", mPhone);
+        params.addFormDataPart("pwd", sms);
 
-        HttpRequest.post(API.USER_LOGIN, params, new BaseHttpRequestCallback<ResultDto>() {
+        HttpRequest.post(API.USER_LOGIN, params, new BaseHttpRequestCallback<UserDto>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -169,8 +173,34 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             }
 
             @Override
-            protected void onSuccess(ResultDto resp) {
+            protected void onSuccess(UserDto resp) {
                 super.onSuccess(resp);
+                try {
+                    if (resp.code == Constants.REQ_RESPOSE_CODE) {
+                        Gson gson = new Gson();
+                        String content = gson.toJson(resp);
+                        try {
+                            if (AccountUtil.saveLoginuserDto(content, LoginActivity.this)) {
+                                AccountUtil.startApp(activity);
+                                back();
+                                overridePendingTransition(0, 0);
+                            } else {
+                                UIUtils.showToast("登陆失败");
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        } finally {
+
+                        }
+
+                    } else {
+                        UIUtils.showToastInCenter(resp.msg);
+//                        UIUtils.showToast(resp.errorMsg);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -207,7 +237,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
 
                 @Override
                 public void sendLoginSmsCallBack(ResultDto status) {
-                    if (status.result) {
+                    if (status.code == Constants.REQ_RESPOSE_CODE) {
                         edtUserNmae.setEnabled(true);
                         setGetCodeState();
                     } else {

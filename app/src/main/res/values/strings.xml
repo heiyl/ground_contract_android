@@ -3,6 +3,7 @@
 
     <string name="account_login_title">登录</string>
     <string name="account_login_edit_phone_hint">输入手机号</string>
+    <string name="account_login_edit_password_hint">输入密码</string>
     <string name="account_login_edit_code_hint">输入验证码</string>
     <string name="account_login_get_phone_code">获取验证码</string>
     <string name="verificationcode_post_reset">%ds</string>

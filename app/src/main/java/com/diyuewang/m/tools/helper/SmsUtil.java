@@ -33,7 +33,8 @@ public class SmsUtil {
 
 
         RequestParams params = new RequestParams();
-        params.addFormDataPart("phoneNum", phoneNo);
+        params.addFormDataPart("phoneNo", phoneNo);
+        params.addFormDataPart("type", 2);
         LogManager.d("SMS_SEND", API.SMS_SEND + "?" + params);
         HttpRequest.post(API.SMS_SEND, params, new BaseHttpRequestCallback<ResultDto>() {
             @Override

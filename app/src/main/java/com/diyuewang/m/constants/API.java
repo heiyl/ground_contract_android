@@ -24,10 +24,14 @@ public class API {
     /**
      * 短信推送
      */
-    public static final String SMS_SEND = HOST + "/user/v1/sendCode.shtml";
+    public static final String SMS_SEND = HOST + "main/send.shtml";
+    /**
+     * 短信验证
+     */
+    public static final String SMS_VAL = HOST + "main/val.shtml";
     /**
      * 用户登录
      */
-    public static final String USER_LOGIN = HOST + "/user/v1/userLogin.shtml";
+    public static final String USER_LOGIN = HOST + "employee/login.shtml";
 
 }
