@@ -168,6 +168,12 @@
                     android:textSize="@dimen/app_font_size_14" />
             </RelativeLayout>
 
+            <com.baidu.mapapi.map.MapView
+                android:id="@+id/bmapView"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/dp_220"
+                android:clickable="true" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyleview"
                 android:layout_width="match_parent"

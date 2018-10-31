@@ -25,6 +25,12 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
+    //读取系统信息，包含系统版本等信息，用作统计
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    //获取统计数据
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+
     <application
         android:name=".BaseApplicaiton"
         android:allowBackup="true"
@@ -39,6 +45,10 @@
         <meta-data
             android:name="UMENG_CHANNEL_VALUE"
             android:value="${UMENG_CHANNEL_VALUE}" />
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="iy3F0rA1GP4a4N7IjZjHqCWsKXbqW2k0" />
 
         <activity android:name=".ui.activity.SplashActivity"
             android:screenOrientation="portrait"

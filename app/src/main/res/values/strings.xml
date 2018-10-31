@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">地约网</string>
+    <string name="app_name">地约</string>
 
     <string name="account_login_title">登录</string>
     <string name="account_login_edit_phone_hint">输入手机号</string>

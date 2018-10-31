@@ -11,11 +11,11 @@ public class API {
         switch (BuildConfig.API_ENV) {
             case "TEST":
                 isDebug = Boolean.TRUE;
-                HOST = "https://speakingdev.ileci.com/le-speaking-java";// 测试
+                HOST = "http://112.124.2.5:8080/diyue/";// 测试
                 break;
             default:
                 isDebug = Boolean.FALSE;
-                HOST = "https://speaking.ileci.com/le-speaking-java"; // 正式地址
+                HOST = "http://112.124.2.5:8080/diyue/"; // 正式地址
                 break;
 
         }

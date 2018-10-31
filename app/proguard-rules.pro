@@ -161,3 +161,11 @@
 -keep class com.google.gson.examples.android.model.** { *; }
 
 ##---------------End:  Gson  ----------
+
+
+##---------------Begin:  BAIDU MAP  ----------
+-keep class com.baidu.** {*;}
+-keep class mapsdkvi.com.** {*;}
+-dontwarn com.baidu.**
+
+##---------------End:  BAIDU MAP  ----------
