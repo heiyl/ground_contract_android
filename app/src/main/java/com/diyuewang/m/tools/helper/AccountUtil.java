@@ -62,10 +62,11 @@ public class AccountUtil {
      * @param context
      */
     public static void startApp(Context context) {
-        if (AccountUtil.isLogin(context)) {
+        /*if (AccountUtil.isLogin(context)) {
             IntentManager.startMainActivity(context);
         } else {
             IntentManager.startLoginActivity(context);
-        }
+        }*/
+        IntentManager.startMainActivity(context);
     }
 }
