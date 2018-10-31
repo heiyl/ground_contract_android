@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.common.library.model.ResultDto;
 import com.diyuewang.m.constants.API;
+import com.diyuewang.m.constants.Constants;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
 
@@ -53,10 +54,10 @@ public class SmsUtil {
                 super.onSuccess(resp);
                 try {
 
-                    if (resp.result) {
+                    if (resp.code == Constants.REQ_RESPOSE_CODE) {
 //                        UIUtils.showToast(UIUtils.getString(R.string.toast_sendSmsed));
                     } else {
-                        UIUtils.showToast(resp.errorMsg);
+                        UIUtils.showToast(resp.msg);
                     }
                     if (sendSmsCallBack != null) {
                         sendSmsCallBack.sendLoginSmsCallBack(resp);

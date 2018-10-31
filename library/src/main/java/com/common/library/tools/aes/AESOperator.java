@@ -13,7 +13,7 @@ public class AESOperator {
     public static final String AES_MODEL = "AES";
     public static final String AES_ENCRYPT_MODEL = "AES/CBC/PKCS5Padding";
     public static final String ENCODE_UTF8 = "utf-8";
-    public static final String PASSWORD = "diyuewang20181030";
+    public static final String PASSWORD = "diyueapk20181030";
 
     private AESOperator() {
 
