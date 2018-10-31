@@ -1,4 +1,4 @@
-package com.diyuewang.m.dialog;
+package com.diyuewang.m.ui.dialog;
 
 import com.contrarywind.adapter.WheelAdapter;
 

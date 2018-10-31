@@ -4,12 +4,11 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.diyuewang.m.base.BaseToolBarActivity;
-import com.diyuewang.m.dialog.SelectPopupWindow;
+import com.diyuewang.m.ui.dialog.SelectPopupWindow;
 import com.diyuewang.m.tools.UIUtils;
 
 import butterknife.BindView;

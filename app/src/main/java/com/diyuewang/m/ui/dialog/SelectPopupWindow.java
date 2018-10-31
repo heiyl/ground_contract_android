@@ -1,4 +1,4 @@
-package com.diyuewang.m.dialog;
+package com.diyuewang.m.ui.dialog;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,13 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.contrarywind.listener.OnItemSelectedListener;
 import com.contrarywind.view.WheelView;
 import com.diyuewang.m.R;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
