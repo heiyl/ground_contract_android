@@ -16,15 +16,15 @@ android {
     signingConfigs {
         debug {
             storeFile file('keystore.jks')
-            storePassword ""
+            storePassword "diyuewang1031"
             keyAlias "diyuewang"
-            keyPassword ""
+            keyPassword "diyuewang1031"
         }
         release {
             storeFile file('keystore.jks')
-            storePassword ""
+            storePassword "diyuewang1031"
             keyAlias "diyuewang"
-            keyPassword ""
+            keyPassword "diyuewang1031"
         }
     }
 
@@ -83,6 +83,8 @@ dependencies {
 
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation 'com.contrarywind:wheelview:4.0.8'
 
     implementation project(':library')
 }

@@ -10,4 +10,6 @@
     <string name="title_main">发布土地</string>
 
     <string name="toast_clickExit">再按一下退出程序</string>
+    <string name="dialog_cancle">取消</string>
+    <string name="dialog_sure">确定</string>
 </resources>
