@@ -16,15 +16,15 @@ android {
     signingConfigs {
         debug {
             storeFile file('keystore.jks')
-            storePassword "diyuewang1031"
+            storePassword ""
             keyAlias "diyuewang"
-            keyPassword "diyuewang1031"
+            keyPassword ""
         }
         release {
             storeFile file('keystore.jks')
-            storePassword "diyuewang1031"
+            storePassword ""
             keyAlias "diyuewang"
-            keyPassword "diyuewang1031"
+            keyPassword ""
         }
     }
 
