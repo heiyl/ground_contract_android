@@ -21,6 +21,7 @@ import com.diyuewang.m.model.UserDto;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.tools.helper.AccountUtil;
 import com.diyuewang.m.tools.helper.SmsUtil;
+import com.diyuewang.m.ui.dialog.commonDialog.LoadingDialogClass;
 import com.google.gson.Gson;
 
 import butterknife.BindString;
@@ -159,7 +160,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
         RequestParams params = new RequestParams();
         params.addFormDataPart("phone", mPhone);
         params.addFormDataPart("pwd", sms);
-
+        LoadingDialogClass.showLodDialog(LoginActivity.this, "登陆中...");
         HttpRequest.post(API.USER_LOGIN, params, new BaseHttpRequestCallback<UserDto>() {
             @Override
             public void onStart() {
@@ -169,7 +170,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             @Override
             public void onResponse(Response httpResponse, String response, Headers headers) {
                 super.onResponse(httpResponse, response, headers);
-
+                LoadingDialogClass.closeLodDialog();
             }
 
             @Override
