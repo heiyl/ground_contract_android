@@ -96,7 +96,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     protected void setOverlay(){
         LatLng latLng = null;
         Marker marker;
-        OverlayOptions options;
+        MarkerOptions options;
 
 
         //获取经纬度
@@ -106,7 +106,9 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                 .position(latLng)//设置位置
                 .icon(bd)//设置图标样式
                 .zIndex(9) // 设置marker所在层级
-                .draggable(false); // 设置手势拖拽;
+                .draggable(true); // 设置手势拖拽;
+//        options.animateType(MarkerOptions.MarkerAnimateType.drop);
+        options.animateType(MarkerOptions.MarkerAnimateType.grow);
         //添加marker
         marker = (Marker) mBaiduMap.addOverlay(options);
 
