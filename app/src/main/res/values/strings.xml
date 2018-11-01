@@ -13,4 +13,6 @@
     <string name="toast_clickExit">再按一下退出程序</string>
     <string name="dialog_cancle">取消</string>
     <string name="dialog_sure">确定</string>
+    <string name="dialog_set">设置</string>
+    <string name="dialog_permission_title">权限设置</string>
 </resources>

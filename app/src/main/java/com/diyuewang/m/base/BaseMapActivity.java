@@ -1,10 +1,14 @@
 package com.diyuewang.m.base;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -19,6 +23,13 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.common.library.tools.grant.PermissionsManager;
+import com.common.library.tools.grant.PermissionsPageManager;
+import com.common.library.tools.grant.PermissionsResultAction;
+import com.diyuewang.m.R;
+import com.diyuewang.m.tools.UIUtils;
+import com.diyuewang.m.ui.dialog.simpledialog.DialogUtils;
+import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
 
 public abstract class BaseMapActivity extends BaseToolBarActivity implements SensorEventListener {
 
@@ -38,9 +49,9 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
 
     protected MyLocationData locData;
     protected boolean isFirstLoc = true; // 是否首次定位
-
     protected MapView mMapView;
     protected BaiduMap mBaiduMap;
+    protected boolean have_permission;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +73,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         mLocClient.setLocOption(option);
         mLocClient.start();
+        changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);
     }
 
     protected void changeLocationMode(LocationMode mCurrentMode) {
@@ -185,6 +197,76 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         mMapView.onDestroy();
         mMapView = null;
         super.onDestroy();
+    }
+
+    public boolean requestPermissions() {
+        PermissionsManager.getInstance().requestPermissionsIfNecessaryForResultSupportUnderM(this,
+                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
+                        , Manifest.permission.ACCESS_FINE_LOCATION
+                        , Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        , Manifest.permission.READ_PHONE_STATE
+                }, permissionsResultAction);
+        return have_permission;
+    }
+
+    PermissionsResultAction permissionsResultAction = new PermissionsResultAction() {
+
+        @Override
+        public void onGranted() {
+            //注意：针对6.0以上设备，必须在手动获得RECORD_AUDIO权限
+            have_permission = true;
+        }
+
+        @Override
+        public void onDenied(String permission) {
+            have_permission = false;
+        }
+    };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
+    }
+
+    public boolean checkPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            have_permission = false;
+            requestPermissions();
+        } else {
+            have_permission = true;
+        }
+        return  have_permission;
+    }
+
+    private void showPermissionDialog(){
+        DialogUtils.getInstance().initSimpleDialog(activity, false)
+                .setTitle(UIUtils.getString(R.string.dialog_permission_title))
+                .setContent("权限请求失败，是否去设置界面中打开地约的权限？")
+                .setSureText(UIUtils.getString(R.string.dialog_set))
+                .setCanceledOnTouchOutside(false)
+                .setCancelable(false)
+                .setOnSimpleDialogClick(new SimpleDialog.OnSimpleDialogClick() {
+                    @Override
+                    public void onSure() {
+                        try {
+                            Intent intent = PermissionsPageManager.getIntent(activity);
+                            activity.startActivity(intent);
+                        } catch (Exception e) {
+                            Intent settingIntent = PermissionsPageManager.getSettingIntent(activity);
+                            activity.startActivity(settingIntent);
+                        }
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                }).show();
     }
 }
 

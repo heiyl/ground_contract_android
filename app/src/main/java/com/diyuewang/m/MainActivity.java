@@ -68,7 +68,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     private void initMap() {
         mBaiduMap = mMapView.getMap();
         initLocation();
-        changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);
+
     }
 
     private void initView() {
