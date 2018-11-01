@@ -1,5 +1,6 @@
 package com.diyuewang.m;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.view.KeyEvent;
@@ -65,9 +66,18 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         tv_location_content.setText(country + " " + province + " " + city + " " + district);
     }
 
+    @Override
+    protected void setMapData() {
+        initLocation();
+    }
+
     private void initMap() {
         mBaiduMap = mMapView.getMap();
-        initLocation();
+        if (Build.VERSION.SDK_INT>=23){
+            showContacts();
+        }else{
+            initLocation();
+        }
 
     }
 
@@ -78,13 +88,11 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "添加经纬度", "发布", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UIUtils.showToast("添加经纬度");
                 setOverlay();
             }
         }, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UIUtils.showToast("发布");
             }
         });
     }

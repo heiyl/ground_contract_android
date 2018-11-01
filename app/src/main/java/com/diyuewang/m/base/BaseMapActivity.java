@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -32,6 +33,7 @@ import com.common.library.tools.grant.PermissionsManager;
 import com.common.library.tools.grant.PermissionsPageManager;
 import com.common.library.tools.grant.PermissionsResultAction;
 import com.diyuewang.m.R;
+import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.ui.dialog.simpledialog.DialogUtils;
 import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
@@ -242,8 +244,6 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         PermissionsManager.getInstance().requestPermissionsIfNecessaryForResultSupportUnderM(this,
                 new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
                         , Manifest.permission.ACCESS_FINE_LOCATION
-                        , Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        , Manifest.permission.READ_PHONE_STATE
                 }, permissionsResultAction);
         return have_permission;
     }
@@ -254,6 +254,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         public void onGranted() {
             //注意：针对6.0以上设备，必须在手动获得RECORD_AUDIO权限
             have_permission = true;
+            setMapData();
         }
 
         @Override
@@ -262,19 +263,17 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         }
     };
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
-    }
+    protected abstract void setMapData();
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+//        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
+//    }
 
     public boolean checkPermission() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
             have_permission = false;
             requestPermissions();
@@ -306,6 +305,47 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                     public void onCancel() {
                     }
                 }).show();
+    }
+
+
+    private static final int BAIDU_READ_PHONE_STATE =100;
+
+    public void showContacts(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getApplicationContext(),"没有权限,请手动开启定位权限",Toast.LENGTH_SHORT).show();
+            // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
+            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, BAIDU_READ_PHONE_STATE);
+        }else{
+            initLocation();
+        }
+    }
+
+
+    //Android6.0申请权限的回调方法
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            // requestCode即所声明的权限获取码，在checkSelfPermission时传入
+            case BAIDU_READ_PHONE_STATE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
+                    LogManager.d("heiyulong");
+                    initLocation();
+                } else {
+                    // 没有获取到权限，做特殊处理
+                    initLocation();
+//                    Toast.makeText(getApplicationContext(), "获取位置权限失败，请手动开启", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 }
