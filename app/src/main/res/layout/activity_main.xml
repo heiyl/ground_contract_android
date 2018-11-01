@@ -17,7 +17,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_49"
             android:divider="@drawable/line_diver"
             android:orientation="vertical"
             android:showDividers="middle">
@@ -173,12 +172,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="@dimen/dp_220"
                 android:clickable="true" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyleview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </LinearLayout>
