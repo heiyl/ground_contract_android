@@ -16,12 +16,17 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.common.library.tools.grant.PermissionsManager;
 import com.common.library.tools.grant.PermissionsPageManager;
@@ -53,14 +58,18 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     protected BaiduMap mBaiduMap;
     protected boolean have_permission;
 
+    BitmapDescriptor bd = BitmapDescriptorFactory
+            .fromResource(R.mipmap.icon_gcoding);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);//获取传感器管理服务
         mCurrentMode = LocationMode.NORMAL;
+        super.onCreate(savedInstanceState);
     }
 
     protected void initLocation() {
+        initOverLay();
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
         // 定位初始化
@@ -74,6 +83,33 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         mLocClient.setLocOption(option);
         mLocClient.start();
         changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);
+    }
+
+    protected void initOverLay(){
+        MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(14.0f);
+        mBaiduMap.setMapStatus(msu);
+    }
+
+    /**
+     * 设置覆盖物
+     */
+    protected void setOverlay(){
+        LatLng latLng = null;
+        Marker marker;
+        OverlayOptions options;
+
+
+        //获取经纬度
+        latLng = new LatLng(mCurrentLat,mCurrentLon);
+        //设置marker
+        options = new MarkerOptions()
+                .position(latLng)//设置位置
+                .icon(bd)//设置图标样式
+                .zIndex(9) // 设置marker所在层级
+                .draggable(false); // 设置手势拖拽;
+        //添加marker
+        marker = (Marker) mBaiduMap.addOverlay(options);
+
     }
 
     protected void changeLocationMode(LocationMode mCurrentMode) {
@@ -196,6 +232,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         mBaiduMap.setMyLocationEnabled(false);
         mMapView.onDestroy();
         mMapView = null;
+        bd.recycle();
         super.onDestroy();
     }
 
@@ -268,6 +305,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                     }
                 }).show();
     }
+
 }
 
 

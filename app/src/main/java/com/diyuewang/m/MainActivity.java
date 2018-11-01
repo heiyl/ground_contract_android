@@ -4,11 +4,11 @@ import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
-import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.diyuewang.m.base.BaseMapActivity;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.ui.dialog.SelectPopupWindow;
@@ -39,7 +39,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     AppCompatEditText edt_size_content;
 
     @BindView(R.id.rlt_root)
-    RelativeLayout rlt_root;
+    LinearLayout rlt_root;
 
     private long firstTime = 1;
 
@@ -51,7 +51,6 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initStatusBar(true);
-        initToolBar(getString(R.string.title_main),false);
         initView();
         initMap();
     }
@@ -63,6 +62,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         String city = location.getCity();//获取城市
         String district = location.getDistrict();//获取区县
         String street = location.getStreet();//获取街道信息
+        tv_location_content.setText(country + " " + province + " " + city + " " + district);
     }
 
     private void initMap() {
@@ -74,6 +74,19 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     private void initView() {
         mMapView = this.findViewById(R.id.bmapView);
         rl_select_type.setOnClickListener(this);
+
+        initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "添加经纬度", "发布", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UIUtils.showToast("添加经纬度");
+                setOverlay();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UIUtils.showToast("发布");
+            }
+        });
     }
 
     @Override

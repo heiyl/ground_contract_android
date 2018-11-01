@@ -224,6 +224,29 @@ public abstract class BaseToolBarActivity extends BaseActivity {
         mRightTxt.setText(right);
         mHeaderRight.setOnClickListener(rightListener);
     }
+    /**
+     * 统一初始化titlebar 左侧和右侧文字
+     */
+    protected void initToolBarLeftRightTxt(String title, String left, String right, View.OnClickListener liftListener, View.OnClickListener rightListener) {
+        FrameLayout mHeaderLeft = (FrameLayout) findViewById(R.id.headbar_left_btn_container);
+        FrameLayout mHeaderRight = (FrameLayout) findViewById(R.id.headbar_right_btn_container);
+        ImageView mBackImg = (ImageView) findViewById(R.id.toolbar_back_img);
+        mBackImg.setVisibility(View.GONE);
+        TextView mLeftTxt = (TextView) findViewById(R.id.toolbar_left_txt);
+        mLeftTxt.setVisibility(View.VISIBLE);
+        mLeftTxt.setText(left);
+        TextView mTitleTxt = (TextView) findViewById(R.id.toolbar_title);
+        mTitleTxt.setText(title);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ImageView mRightImg = (ImageView) findViewById(R.id.toolbar_right_img);
+        mRightImg.setVisibility(View.GONE);
+        TextView mRightTxt = (TextView) findViewById(R.id.toolbar_right_txt);
+        mRightTxt.setVisibility(View.VISIBLE);
+        mRightTxt.setText(right);
+        mHeaderLeft.setOnClickListener(liftListener);
+        mHeaderRight.setOnClickListener(rightListener);
+    }
 
     /**
      * 统一初始化titlebar 左侧图片和右侧文字
