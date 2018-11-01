@@ -63,7 +63,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         String city = location.getCity();//获取城市
         String district = location.getDistrict();//获取区县
         String street = location.getStreet();//获取街道信息
-        tv_location_content.setText(country + " " + province + " " + city + " " + district);
+        tv_location_content.setText(province + " " + city + " " + district);
     }
 
     @Override

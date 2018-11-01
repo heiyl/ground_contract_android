@@ -21,52 +21,145 @@
             android:orientation="vertical"
             android:showDividers="middle">
 
-            <RelativeLayout
-                android:id="@+id/rl_location"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_back_bg"
-                android:gravity="center_vertical"
-                android:padding="@dimen/dp_15">
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/iv_location"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:id="@+id/rl_location"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="left" />
+                    android:background="@drawable/selector_back_bg"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/dp_15">
 
-                <TextView
-                    android:id="@+id/tv_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/dp_10"
-                    android:layout_toRightOf="@+id/iv_location"
-                    android:text="流转区域"
-                    android:textColor="@color/color_252B3B"
-                    android:textSize="@dimen/app_font_size_16" />
+                    <ImageView
+                        android:id="@+id/iv_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="left" />
 
-                <ImageView
-                    android:id="@+id/iv_location_arrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@mipmap/ic_rightarrow"
-                    android:visibility="invisible" />
+                    <TextView
+                        android:id="@+id/tv_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_toRightOf="@+id/iv_location"
+                        android:text="流转区域"
+                        android:textColor="@color/color_252B3B"
+                        android:textSize="@dimen/app_font_size_16" />
 
-                <TextView
-                    android:id="@+id/tv_location_content"
-                    android:layout_width="wrap_content"
+                    <ImageView
+                        android:id="@+id/iv_location_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@mipmap/ic_rightarrow"
+                        android:visibility="invisible" />
+
+                    <TextView
+                        android:id="@+id/tv_location_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/iv_location_arrow"
+                        android:hint="位置获取中..."
+                        android:paddingRight="@dimen/dp_8"
+                        android:textColor="@color/color_252B3B"
+                        android:textSize="@dimen/app_font_size_14" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/iv_location_arrow"
-                    android:hint="位置获取中..."
-                    android:paddingRight="@dimen/dp_8"
-                    android:textColor="@color/color_252B3B"
-                    android:textSize="@dimen/app_font_size_14" />
-            </RelativeLayout>
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/dp_15">
+
+
+                    <TextView
+                        android:id="@+id/tv_town"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:visibility="invisible"
+                        android:text="流转区域"
+                        android:textColor="@color/color_252B3B"
+                        android:textSize="@dimen/app_font_size_16" />
+
+                    <TextView
+                        android:id="@+id/iv_town_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="镇"
+                        android:textColor="@color/content_normal_color" />
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/edt_town_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/iv_town_arrow"
+                        android:layout_toRightOf="@id/tv_town"
+                        android:background="@null"
+                        android:gravity="center_vertical|right"
+                        android:hint="请输入镇名称"
+                        android:paddingLeft="@dimen/dp_8"
+                        android:paddingRight="@dimen/dp_8"
+                        android:textColor="@color/color_252B3B"
+                        android:textSize="@dimen/app_font_size_14" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:padding="@dimen/dp_15">
+
+
+                    <TextView
+                        android:id="@+id/tv_village"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:visibility="invisible"
+                        android:text="流转区域"
+                        android:textColor="@color/color_252B3B"
+                        android:textSize="@dimen/app_font_size_16" />
+
+                    <TextView
+                        android:id="@+id/iv_village_arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:text="村"
+                        android:textColor="@color/content_normal_color" />
+
+                    <android.support.v7.widget.AppCompatEditText
+                        android:id="@+id/edt_village_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/iv_village_arrow"
+                        android:layout_toRightOf="@id/tv_village"
+                        android:background="@null"
+                        android:gravity="center_vertical|right"
+                        android:hint="请输入村名称"
+                        android:paddingLeft="@dimen/dp_8"
+                        android:paddingRight="@dimen/dp_8"
+                        android:textColor="@color/color_252B3B"
+                        android:textSize="@dimen/app_font_size_14" />
+                </RelativeLayout>
+
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_select_type"
@@ -170,7 +263,7 @@
             <com.baidu.mapapi.map.MapView
                 android:id="@+id/bmapView"
                 android:layout_width="fill_parent"
-                android:layout_height="@dimen/dp_220"
+                android:layout_height="360dp"
                 android:clickable="true" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

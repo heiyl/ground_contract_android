@@ -44,7 +44,7 @@
             android:background="@drawable/edt_white_bg_cornors_50"
             android:cursorVisible="true"
             android:hint="@string/account_login_edit_password_hint"
-            android:imeOptions="actionNext"
+            android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
