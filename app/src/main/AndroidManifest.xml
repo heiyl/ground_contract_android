@@ -50,6 +50,12 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="iy3F0rA1GP4a4N7IjZjHqCWsKXbqW2k0" />
 
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" >
+        </service>
+
         <activity android:name=".ui.activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppStartLoadTranslucent">

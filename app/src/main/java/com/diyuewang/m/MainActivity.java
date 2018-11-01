@@ -7,15 +7,16 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.baidu.mapapi.map.MapView;
-import com.diyuewang.m.base.BaseToolBarActivity;
-import com.diyuewang.m.ui.dialog.SelectPopupWindow;
+import com.baidu.location.BDLocation;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.diyuewang.m.base.BaseMapActivity;
 import com.diyuewang.m.tools.UIUtils;
+import com.diyuewang.m.ui.dialog.SelectPopupWindow;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseToolBarActivity implements View.OnClickListener, SelectPopupWindow.WheelViewListener {
+public class MainActivity extends BaseMapActivity implements View.OnClickListener, SelectPopupWindow.WheelViewListener {
 
     //流转区域视图
     @BindView(R.id.rl_location)
@@ -40,9 +41,6 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
     @BindView(R.id.rlt_root)
     RelativeLayout rlt_root;
 
-    @BindView(R.id.bmapView)
-    MapView mMapView;
-
     private long firstTime = 1;
 
     private SelectPopupWindow menuWindow;
@@ -55,9 +53,26 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
         initStatusBar(true);
         initToolBar(getString(R.string.title_main),false);
         initView();
+        initMap();
+    }
+
+    @Override
+    protected void setAdress(BDLocation location) {
+        String country = location.getCountry();//获取国家
+        String province = location.getProvince();//获取省份
+        String city = location.getCity();//获取城市
+        String district = location.getDistrict();//获取区县
+        String street = location.getStreet();//获取街道信息
+    }
+
+    private void initMap() {
+        mBaiduMap = mMapView.getMap();
+        initLocation();
+        changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);
     }
 
     private void initView() {
+        mMapView = this.findViewById(R.id.bmapView);
         rl_select_type.setOnClickListener(this);
     }
 
@@ -95,24 +110,5 @@ public class MainActivity extends BaseToolBarActivity implements View.OnClickLis
                 menuWindow = new SelectPopupWindow(activity, rlt_root,this);
                 break;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
-        mMapView.onDestroy();
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //在activity执行onResume时执行mMapView. onResume ()，实现地图生命周期管理
-        mMapView.onResume();
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //在activity执行onPause时执行mMapView. onPause ()，实现地图生命周期管理
-        mMapView.onPause();
     }
 }

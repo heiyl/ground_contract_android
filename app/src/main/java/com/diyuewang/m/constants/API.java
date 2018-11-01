@@ -33,5 +33,9 @@ public class API {
      * 用户登录
      */
     public static final String USER_LOGIN = HOST + "employee/login.shtml";
+    /**
+     * 发布土地 -员工发布
+     */
+    public static final String EMPLOYEE_SEND = HOST + "order/create/employee.shtml";
 
 }
