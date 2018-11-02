@@ -1,5 +1,6 @@
 package com.diyuewang.m;
 
+import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
@@ -10,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
+import com.baidu.mapapi.map.BaiduMap;
 import com.diyuewang.m.base.BaseMapActivity;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.ui.dialog.SelectPopupWindow;
@@ -66,13 +68,14 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         tv_location_content.setText(province + " " + city + " " + district);
     }
 
-    @Override
-    protected void setMapData() {
-        initLocation();
-    }
-
     private void initMap() {
         mBaiduMap = mMapView.getMap();
+        mBaiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                mMapView.setZoomControlsPosition(new Point(20, 20));
+            }
+        });
         if (Build.VERSION.SDK_INT>=23){
             showContacts();
         }else{

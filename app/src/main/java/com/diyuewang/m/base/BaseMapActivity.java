@@ -27,11 +27,8 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
-import com.common.library.tools.grant.PermissionsManager;
 import com.common.library.tools.grant.PermissionsPageManager;
-import com.common.library.tools.grant.PermissionsResultAction;
 import com.diyuewang.m.R;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
@@ -79,6 +76,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         mLocClient.registerLocationListener(myListener);
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
         option.setCoorType("bd09ll"); // 设置坐标类型
         option.setScanSpan(1000);
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
@@ -239,50 +237,6 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         bd.recycle();
         super.onDestroy();
     }
-
-    public boolean requestPermissions() {
-        PermissionsManager.getInstance().requestPermissionsIfNecessaryForResultSupportUnderM(this,
-                new String[]{Manifest.permission.ACCESS_COARSE_LOCATION
-                        , Manifest.permission.ACCESS_FINE_LOCATION
-                }, permissionsResultAction);
-        return have_permission;
-    }
-
-    PermissionsResultAction permissionsResultAction = new PermissionsResultAction() {
-
-        @Override
-        public void onGranted() {
-            //注意：针对6.0以上设备，必须在手动获得RECORD_AUDIO权限
-            have_permission = true;
-            setMapData();
-        }
-
-        @Override
-        public void onDenied(String permission) {
-            have_permission = false;
-        }
-    };
-
-    protected abstract void setMapData();
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
-//    }
-
-    public boolean checkPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            have_permission = false;
-            requestPermissions();
-        } else {
-            have_permission = true;
-        }
-        return  have_permission;
-    }
-
     private void showPermissionDialog(){
         DialogUtils.getInstance().initSimpleDialog(activity, false)
                 .setTitle(UIUtils.getString(R.string.dialog_permission_title))
