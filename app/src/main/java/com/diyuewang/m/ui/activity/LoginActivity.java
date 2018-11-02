@@ -170,7 +170,6 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             @Override
             public void onResponse(Response httpResponse, String response, Headers headers) {
                 super.onResponse(httpResponse, response, headers);
-                LoadingDialogClass.closeLodDialog();
             }
 
             @Override
@@ -182,30 +181,34 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
                         String content = gson.toJson(resp);
                         try {
                             if (AccountUtil.saveLoginuserDto(content, LoginActivity.this)) {
+                                LoadingDialogClass.closeLodDialog();
                                 AccountUtil.startApp(activity);
                                 back();
                                 overridePendingTransition(0, 0);
                             } else {
+                                LoadingDialogClass.closeLodDialog();
                                 UIUtils.showToast("登陆失败");
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
                         } finally {
-
+                            LoadingDialogClass.closeLodDialog();
                         }
 
                     } else {
+                        LoadingDialogClass.closeLodDialog();
                         UIUtils.showToastInCenter(resp.msg);
-//                        UIUtils.showToast(resp.errorMsg);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                LoadingDialogClass.closeLodDialog();
             }
 
             @Override
             public void onFailure(int errorCode, String msg) {
+                LoadingDialogClass.closeLodDialog();
                 super.onFailure(errorCode, msg);
             }
         });

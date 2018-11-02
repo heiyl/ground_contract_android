@@ -322,6 +322,14 @@ public abstract class BaseToolBarActivity extends BaseActivity {
         TextView mTitleTxt = (TextView) findViewById(R.id.toolbar_title);
         mTitleTxt.setTextColor(getResources().getColor(color));
     }
+    protected void setToolBarLeftTitleColor(int color) {
+        TextView mLeftTxt = (TextView) findViewById(R.id.toolbar_left_txt);
+        mLeftTxt.setTextColor(getResources().getColor(color));
+    }
+    protected void setToolBarRightTitleColor(int color) {
+        TextView mRightTxt = (TextView) findViewById(R.id.toolbar_right_txt);
+        mRightTxt.setTextColor(getResources().getColor(color));
+    }
 
     protected void setToolBarBottomLine(boolean have) {
         View diver = findViewById(R.id.diver);

@@ -57,6 +57,7 @@
                 android:ellipsize="end"
                 android:gravity="center"
                 android:maxLines="1"
+                android:textStyle="bold"
                 android:textColor="@color/tool_title_color"
                 android:textSize="@dimen/app_tool_title_size" />
 

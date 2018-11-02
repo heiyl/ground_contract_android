@@ -12,12 +12,26 @@ import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.map.BaiduMap;
+import com.common.library.business.FinalHttpRequestCallback;
+import com.common.library.model.ResultDto;
 import com.diyuewang.m.base.BaseMapActivity;
+import com.diyuewang.m.constants.API;
+import com.diyuewang.m.constants.Constants;
+import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
+import com.diyuewang.m.tools.helper.AccountUtil;
+import com.diyuewang.m.ui.activity.LoginActivity;
 import com.diyuewang.m.ui.dialog.SelectPopupWindow;
+import com.diyuewang.m.ui.dialog.commonDialog.LoadingDialog;
+import com.diyuewang.m.ui.dialog.commonDialog.LoadingDialogClass;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.finalteam.okhttpfinal.HttpRequest;
+import cn.finalteam.okhttpfinal.RequestParams;
+import cn.finalteam.toolsfinal.StringUtils;
+import okhttp3.Headers;
+import okhttp3.Response;
 
 public class MainActivity extends BaseMapActivity implements View.OnClickListener, SelectPopupWindow.WheelViewListener {
 
@@ -44,9 +58,32 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     @BindView(R.id.rlt_root)
     LinearLayout rlt_root;
 
+    //镇名称
+    @BindView(R.id.edt_town_content)
+    AppCompatEditText edt_town_content;
+
+    //村名称
+    @BindView(R.id.edt_village_content)
+    AppCompatEditText edt_village_content;
+
+    //手机号
+    @BindView(R.id.edt_phone_content)
+    AppCompatEditText edt_phone_content;
+
+    //手机号
+    @BindView(R.id.edt_name_content)
+    AppCompatEditText edt_name_content;
+
+
     private long firstTime = 1;
 
     private SelectPopupWindow menuWindow;
+    private String country;
+    private String province;
+    private String city;
+    private String district;
+
+    private int type = -1;//0:托管;1：流转
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +97,11 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
 
     @Override
     protected void setAdress(BDLocation location) {
-        String country = location.getCountry();//获取国家
-        String province = location.getProvince();//获取省份
-        String city = location.getCity();//获取城市
-        String district = location.getDistrict();//获取区县
-        String street = location.getStreet();//获取街道信息
-        tv_location_content.setText(province + " " + city + " " + district);
+        country = location.getCountry();//获取国家
+        province = location.getProvince();//获取省份
+        city = location.getCity();//获取城市
+        district = location.getDistrict();//获取区县
+        tv_location_content.setText(city + " " + district);
     }
 
     private void initMap() {
@@ -88,16 +124,84 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         mMapView = this.findViewById(R.id.bmapView);
         rl_select_type.setOnClickListener(this);
 
-        initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "添加经纬度", "发布", new View.OnClickListener() {
+        setToolBarLeftTitleColor(R.color.colorAccent);
+        setToolBarRightTitleColor(R.color.colorAccent);
+        initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "添加经纬度", "提交", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setOverlay();
+                if(!UIUtils.isFastChangeClick()){
+                    setOverlay();
+                }
             }
         }, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(canSubmit()){
+                    submit();
+                }
             }
         });
+    }
+
+    /**
+     * 发布
+     */
+    private void submit() {
+        LoadingDialogClass.showLodDialog(MainActivity.this, "发布中...");
+        RequestParams params = AccountUtil.getRequestParams(activity);
+        params.addFormDataPart("area", edt_size_content.getText().toString());
+        params.addFormDataPart("businessType", type);
+        params.addFormDataPart("title", AccountUtil.getEmployee().title);
+        params.addFormDataPart("country", country);
+        params.addFormDataPart("province", province);
+        params.addFormDataPart("city", city);
+        params.addFormDataPart("county", district);
+        params.addFormDataPart("employeeId", AccountUtil.getUserId());
+        params.addFormDataPart("points", getLocationInfo());
+        params.addFormDataPart("town", edt_town_content.getText().toString());
+        params.addFormDataPart("village", edt_village_content.getText().toString());
+        params.addFormDataPart("userPhone", edt_phone_content.getText().toString());
+        params.addFormDataPart("userName", edt_name_content.getText().toString());
+        HttpRequest.post(API.EMPLOYEE_SEND, params, new FinalHttpRequestCallback<ResultDto>() {
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onResponse(Response httpResponse, String response, Headers headers) {
+                super.onResponse(httpResponse, response, headers);
+                LogManager.d("EMPLOYEE_SEND", response);
+            }
+
+            @Override
+            protected void onRespSuccess(ResultDto resp) {
+                super.onRespSuccess(resp);
+                try {
+                    if (resp.code == Constants.REQ_RESPOSE_CODE) {
+                        LoadingDialogClass.closeLodDialog();
+                        resetData();
+                        UIUtils.showToastInCenter(resp.msg);
+                    } else {
+                        UIUtils.showToastInCenter(resp.msg);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onRespFailure(int errorCode, String msg) {
+                super.onRespFailure(errorCode, msg);
+                LoadingDialogClass.closeLodDialog();
+                UIUtils.showToastInCenter("请求异常！");
+            }
+        });
+    }
+
+    private void resetData() {
+        locationInfoList.clear();
+        mBaiduMap.clear();
     }
 
     @Override
@@ -124,6 +228,12 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
 
     @Override
     public void getContent(String content) {
+        //0:托管;1：流转
+        if("托管".equals(content)){
+            type = 0;
+        }else{
+            type = 1;
+        }
         tv_select_type_content.setText(content);
     }
 
@@ -134,5 +244,62 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                 menuWindow = new SelectPopupWindow(activity, rlt_root,this);
                 break;
         }
+    }
+
+    private boolean canSubmit(){
+        if(StringUtils.isEmpty(country) || StringUtils.isEmpty(province) || StringUtils.isEmpty(city) || StringUtils.isEmpty(district)){
+            UIUtils.showToastInCenter("定位失败，无法发布！");
+            return false;
+        }
+        String townContent = edt_town_content.getText().toString();
+        String townVillage = edt_village_content.getText().toString();
+        if(StringUtils.isEmpty(townContent) || StringUtils.isEmpty(townVillage)){
+            UIUtils.showToastInCenter("镇&村名称不能为空！");
+            return false;
+        }
+        if(type == -1){
+            UIUtils.showToastInCenter("未选择流转方式！");
+            return false;
+        }
+
+        String sizeContent = edt_size_content.getText().toString();
+        if(StringUtils.isEmpty(sizeContent)){
+            UIUtils.showToastInCenter("土地面积不能为空！");
+            return false;
+        }
+        String phoneContent = edt_phone_content.getText().toString();
+        if(StringUtils.isEmpty(phoneContent)){
+            UIUtils.showToastInCenter("手机号不能为空！");
+            return false;
+        }
+        String nameContent = edt_name_content.getText().toString();
+        if(StringUtils.isEmpty(nameContent)){
+            UIUtils.showToastInCenter("姓名不能为空！");
+            return false;
+        }
+        if(locationInfoList == null || locationInfoList.size() < 3){
+            UIUtils.showToastInCenter("经纬度至少添加三个！");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 获取打点信息
+     */
+    private String getLocationInfo(){
+        String content = "";
+        if(locationInfoList != null&& locationInfoList.size() > 0){
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < locationInfoList.size(); i++) {
+                String singleContent =locationInfoList.get(i).mCurrentLat + "," + locationInfoList.get(i).mCurrentLon;
+                sb.append(singleContent);
+                if (i != locationInfoList.size() - 1) {
+                    sb.append("\r\n");
+                }
+            }
+            content = sb.toString();
+        }
+        return content;
     }
 }

@@ -48,7 +48,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_10"
                         android:layout_toRightOf="@+id/iv_location"
-                        android:text="流转区域"
+                        android:text="@string/tudi_area"
                         android:textColor="@color/color_252B3B"
                         android:textSize="@dimen/app_font_size_16" />
 
@@ -112,7 +112,13 @@
                             android:textColor="@color/color_252B3B"
                             android:textSize="@dimen/app_font_size_14" />
                     </RelativeLayout>
-
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="@dimen/dp_15"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/dp_10"
+                        android:layout_marginRight="@dimen/dp_10"
+                        android:background="@color/tool_diver_color"/>
                     <RelativeLayout
                         android:layout_weight="1"
                         android:layout_width="match_parent"
@@ -170,7 +176,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_select_type"
-                    android:text="流转方式"
+                    android:text="@string/tudi_type"
                     android:textColor="@color/color_252B3B"
                     android:textSize="@dimen/app_font_size_16" />
 
@@ -217,7 +223,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_size"
-                    android:text="流转面积"
+                    android:text="@string/tudi_size"
                     android:textColor="@color/color_252B3B"
                     android:textSize="@dimen/app_font_size_16" />
 
@@ -271,7 +277,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_phone"
-                    android:text="土地所有人手机"
+                    android:text="@string/tudi_phone"
                     android:textColor="@color/color_252B3B"
                     android:textSize="@dimen/app_font_size_16" />
 
@@ -324,7 +330,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_toRightOf="@+id/iv_name"
-                    android:text="土地所有姓名"
+                    android:text="@string/tudi_name"
                     android:textColor="@color/color_252B3B"
                     android:textSize="@dimen/app_font_size_16" />
 
@@ -348,7 +354,6 @@
                     android:background="@null"
                     android:gravity="center_vertical|right"
                     android:hint="请输入土地所有人姓名"
-                    android:inputType="number"
                     android:paddingLeft="@dimen/dp_8"
                     android:paddingRight="@dimen/dp_8"
                     android:textColor="@color/color_252B3B"

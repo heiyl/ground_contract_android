@@ -15,4 +15,10 @@
     <string name="dialog_sure">确定</string>
     <string name="dialog_set">设置</string>
     <string name="dialog_permission_title">权限设置</string>
+
+    <string name="tudi_area">流转区域:</string>
+    <string name="tudi_type">流转方式:</string>
+    <string name="tudi_size">流转面积:</string>
+    <string name="tudi_phone">土地所有人手机:</string>
+    <string name="tudi_name">土地所有姓名:</string>
 </resources>

@@ -30,10 +30,14 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.common.library.tools.grant.PermissionsPageManager;
 import com.diyuewang.m.R;
+import com.diyuewang.m.model.LocationInfo;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.ui.dialog.simpledialog.DialogUtils;
 import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class BaseMapActivity extends BaseToolBarActivity implements SensorEventListener {
 
@@ -55,7 +59,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     protected boolean isFirstLoc = true; // 是否首次定位
     protected MapView mMapView;
     protected BaiduMap mBaiduMap;
-    protected boolean have_permission;
+    protected List<LocationInfo> locationInfoList = new ArrayList<>();
 
     BitmapDescriptor bd = BitmapDescriptorFactory
             .fromResource(R.mipmap.icon_gcoding);
@@ -98,6 +102,10 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         Marker marker;
         MarkerOptions options;
 
+        LocationInfo locationInfo = new LocationInfo();
+        locationInfo.mCurrentLat = mCurrentLat;
+        locationInfo.mCurrentLon = mCurrentLon;
+        locationInfoList.add(locationInfo);
 
         //获取经纬度
         latLng = new LatLng(mCurrentLat,mCurrentLon);
