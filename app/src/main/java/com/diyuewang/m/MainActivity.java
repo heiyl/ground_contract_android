@@ -74,6 +74,10 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     @BindView(R.id.edt_name_content)
     AppCompatEditText edt_name_content;
 
+    //经纬度个数
+    @BindView(R.id.tv_count)
+    TextView tv_count;
+
 
     private long firstTime = 1;
 
@@ -131,6 +135,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
             public void onClick(View v) {
                 if(!UIUtils.isFastChangeClick()){
                     setOverlay();
+                    setLocationCount();
                 }
             }
         }, new View.OnClickListener() {
@@ -141,6 +146,15 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                 }
             }
         });
+    }
+
+    private void setLocationCount(){
+        if(locationInfoList != null && locationInfoList.size() > 0){
+            tv_count.setVisibility(View.VISIBLE);
+            tv_count.setText("您当前已经添加经纬度个数: " + locationInfoList.size());
+        }else{
+            tv_count.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -202,6 +216,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     private void resetData() {
         locationInfoList.clear();
         mBaiduMap.clear();
+        setLocationCount();
     }
 
     @Override

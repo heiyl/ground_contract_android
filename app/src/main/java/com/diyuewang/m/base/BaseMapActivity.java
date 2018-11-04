@@ -120,6 +120,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         //添加marker
         marker = (Marker) mBaiduMap.addOverlay(options);
 
+
     }
 
     protected void changeLocationMode(LocationMode mCurrentMode) {
