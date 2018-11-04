@@ -24,6 +24,8 @@ import com.diyuewang.m.ui.activity.LoginActivity;
 import com.diyuewang.m.ui.dialog.SelectPopupWindow;
 import com.diyuewang.m.ui.dialog.commonDialog.LoadingDialog;
 import com.diyuewang.m.ui.dialog.commonDialog.LoadingDialogClass;
+import com.diyuewang.m.ui.dialog.simpledialog.DialogUtils;
+import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -127,6 +129,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     private void initView() {
         mMapView = this.findViewById(R.id.bmapView);
         rl_select_type.setOnClickListener(this);
+        tv_count.setOnClickListener(this);
 
         setToolBarLeftTitleColor(R.color.colorAccent);
         setToolBarRightTitleColor(R.color.colorAccent);
@@ -151,7 +154,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     private void setLocationCount(){
         if(locationInfoList != null && locationInfoList.size() > 0){
             tv_count.setVisibility(View.VISIBLE);
-            tv_count.setText("您当前已经添加经纬度个数: " + locationInfoList.size());
+            tv_count.setText("您当前已添加经纬度个数: " + locationInfoList.size() + "      >>");
         }else{
             tv_count.setVisibility(View.GONE);
         }
@@ -258,6 +261,9 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
             case R.id.rl_select_type:
                 menuWindow = new SelectPopupWindow(activity, rlt_root,this);
                 break;
+            case R.id.tv_count:
+                showResetDialog();
+                break;
         }
     }
 
@@ -316,5 +322,23 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
             content = sb.toString();
         }
         return content;
+    }
+
+    protected void showResetDialog(){
+        DialogUtils.getInstance().initSimpleDialog(activity, true)
+                .setTitle(UIUtils.getString(R.string.dialog_reset_title))
+                .setContent("当前添加的经纬度将被清除，您确定要重置经纬度吗？")
+                .setSureText(UIUtils.getString(R.string.dialog_sure))
+                .setCanceledOnTouchOutside(false)
+//                .setCancelable(false)
+                .setOnSimpleDialogClick(new SimpleDialog.OnSimpleDialogClick() {
+                    @Override
+                    public void onSure() {
+                        resetData();
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                }).show();
     }
 }

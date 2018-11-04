@@ -246,6 +246,8 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         bd.recycle();
         super.onDestroy();
     }
+
+
     private void showPermissionDialog(){
         DialogUtils.getInstance().initSimpleDialog(activity, false)
                 .setTitle(UIUtils.getString(R.string.dialog_permission_title))
