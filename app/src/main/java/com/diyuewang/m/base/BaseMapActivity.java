@@ -9,6 +9,9 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -31,6 +34,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.common.library.tools.grant.PermissionsPageManager;
 import com.diyuewang.m.R;
 import com.diyuewang.m.model.LocationInfo;
+import com.diyuewang.m.model.MarkerInfoUtil;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.ui.dialog.simpledialog.DialogUtils;
@@ -59,7 +63,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     protected boolean isFirstLoc = true; // 是否首次定位
     protected MapView mMapView;
     protected BaiduMap mBaiduMap;
-    protected List<LocationInfo> locationInfoList = new ArrayList<>();
+    protected List<MarkerInfoUtil> locationInfoList = new ArrayList<>();
 
     BitmapDescriptor bd = BitmapDescriptorFactory
             .fromResource(R.mipmap.icon_gcoding);
@@ -101,11 +105,15 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         LatLng latLng = null;
         Marker marker;
         MarkerOptions options;
+        String name = (locationInfoList.size() + 1) + "";
 
-        LocationInfo locationInfo = new LocationInfo();
-        locationInfo.mCurrentLat = mCurrentLat;
-        locationInfo.mCurrentLon = mCurrentLon;
-        locationInfoList.add(locationInfo);
+        MarkerInfoUtil locationInfo = new MarkerInfoUtil();
+        locationInfo.setLatitude(mCurrentLat);
+        locationInfo.setLongitude(mCurrentLon);
+        locationInfo.setName(name);
+
+        bd = getOverIcon(name);
+
 
         //获取经纬度
         latLng = new LatLng(mCurrentLat,mCurrentLon);
@@ -119,7 +127,23 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         options.animateType(MarkerOptions.MarkerAnimateType.grow);
         //添加marker
         marker = (Marker) mBaiduMap.addOverlay(options);
+        Bundle bundle = new Bundle();
+        //info必须实现序列化接口
+        bundle.putSerializable("info", locationInfo);
+        marker.setExtraInfo(bundle);
 
+        locationInfo.setMarker(marker);
+        locationInfoList.add(locationInfo);
+
+
+    }
+
+    private BitmapDescriptor getOverIcon(String name){
+        View markerView = LayoutInflater.from(this).inflate(R.layout.layout_market, null);
+        TextView tv_name = (TextView) markerView.findViewById(R.id.tv_name);
+        tv_name.setText(name);
+        BitmapDescriptor bd = BitmapDescriptorFactory.fromView(markerView);
+        return bd;
 
     }
 

@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.Marker;
 import com.common.library.business.FinalHttpRequestCallback;
 import com.common.library.model.ResultDto;
 import com.diyuewang.m.base.BaseMapActivity;
 import com.diyuewang.m.constants.API;
 import com.diyuewang.m.constants.Constants;
+import com.diyuewang.m.model.MarkerInfoUtil;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.tools.helper.AccountUtil;
@@ -112,12 +114,27 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
 
     private void initMap() {
         mBaiduMap = mMapView.getMap();
+        //控制地图中放大缩小的按钮的位置
         mBaiduMap.setOnMapLoadedCallback(new BaiduMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
                 mMapView.setZoomControlsPosition(new Point(20, 20));
             }
         });
+
+        //添加marker点击事件的监听
+        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                //从marker中获取info信息
+                Bundle bundle = marker.getExtraInfo();
+                MarkerInfoUtil markerInfo = (MarkerInfoUtil) bundle.getSerializable("info");
+                showDelMarketDialog(markerInfo,marker);
+                return true;
+            }
+        });
+
+        //权限控制
         if (Build.VERSION.SDK_INT>=23){
             showContacts();
         }else{
@@ -313,7 +330,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         if(locationInfoList != null&& locationInfoList.size() > 0){
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < locationInfoList.size(); i++) {
-                String singleContent =locationInfoList.get(i).mCurrentLat + "," + locationInfoList.get(i).mCurrentLon;
+                String singleContent =locationInfoList.get(i).getLatitude() + "," + locationInfoList.get(i).getLongitude();
                 sb.append(singleContent);
                 if (i != locationInfoList.size() - 1) {
                     sb.append("\r\n");
@@ -335,6 +352,25 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                     @Override
                     public void onSure() {
                         resetData();
+                    }
+                    @Override
+                    public void onCancel() {
+                    }
+                }).show();
+    }
+    protected void showDelMarketDialog(final MarkerInfoUtil markerInfo, final Marker marker){
+        DialogUtils.getInstance().initSimpleDialog(activity, true)
+                .setTitle(UIUtils.getString(R.string.dialog_del_market_title))
+                .setContent("当前要删除的经纬度为:【" + markerInfo.getLatitude() + "," + markerInfo.getLongitude() + "】" )
+                .setSureText(UIUtils.getString(R.string.dialog_sure))
+                .setCanceledOnTouchOutside(false)
+//                .setCancelable(false)
+                .setOnSimpleDialogClick(new SimpleDialog.OnSimpleDialogClick() {
+                    @Override
+                    public void onSure() {
+                        locationInfoList.remove(markerInfo);
+                        marker.remove();
+                        setLocationCount();
                     }
                     @Override
                     public void onCancel() {
