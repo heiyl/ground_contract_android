@@ -4,6 +4,8 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -22,9 +24,9 @@ import com.diyuewang.m.model.MarkerInfoUtil;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.tools.helper.AccountUtil;
-import com.diyuewang.m.ui.activity.LoginActivity;
+import com.diyuewang.m.tools.rvhelper.divider.RecycleViewDivider;
+import com.diyuewang.m.ui.adapter.MarketAdapter;
 import com.diyuewang.m.ui.dialog.SelectPopupWindow;
-import com.diyuewang.m.ui.dialog.commonDialog.LoadingDialog;
 import com.diyuewang.m.ui.dialog.commonDialog.LoadingDialogClass;
 import com.diyuewang.m.ui.dialog.simpledialog.DialogUtils;
 import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
@@ -37,7 +39,7 @@ import cn.finalteam.toolsfinal.StringUtils;
 import okhttp3.Headers;
 import okhttp3.Response;
 
-public class MainActivity extends BaseMapActivity implements View.OnClickListener, SelectPopupWindow.WheelViewListener {
+public class MainActivity extends BaseMapActivity implements View.OnClickListener, SelectPopupWindow.WheelViewListener,MarketAdapter.RemoveMarketListener {
 
     //流转区域视图
     @BindView(R.id.rl_location)
@@ -82,6 +84,11 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     @BindView(R.id.tv_count)
     TextView tv_count;
 
+    //经纬度个数
+    @BindView(R.id.rv_view)
+    RecyclerView rv_view;
+
+    private MarketAdapter adapter;
 
     private long firstTime = 1;
 
@@ -101,6 +108,16 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         initStatusBar(true);
         initView();
         initMap();
+        initAdapter();
+    }
+
+    private void initAdapter() {
+        rv_view.setNestedScrollingEnabled(false);
+        rv_view.setLayoutManager(new LinearLayoutManager(activity));
+        rv_view.addItemDecoration(new RecycleViewDivider(activity, LinearLayoutManager.HORIZONTAL, R.drawable.line_diver));
+        adapter = new MarketAdapter(this);
+        adapter.setRemoveMarketListener(this);
+        rv_view.setAdapter(adapter);
     }
 
     @Override
@@ -123,7 +140,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         });
 
         //添加marker点击事件的监听
-        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+        /*mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 //从marker中获取info信息
@@ -132,7 +149,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                 showDelMarketDialog(markerInfo,marker);
                 return true;
             }
-        });
+        });*/
 
         //权限控制
         if (Build.VERSION.SDK_INT>=23){
@@ -175,6 +192,9 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         }else{
             tv_count.setVisibility(View.GONE);
         }
+        adapter.clearData();
+        adapter.addDataAll(locationInfoList);
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -376,5 +396,10 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                     public void onCancel() {
                     }
                 }).show();
+    }
+
+    @Override
+    public void removeMarekt(MarkerInfoUtil markerInfoUtil,Marker marker) {
+        showDelMarketDialog(markerInfoUtil,marker);
     }
 }

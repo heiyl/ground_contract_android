@@ -112,7 +112,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         locationInfo.setLongitude(mCurrentLon);
         locationInfo.setName(name);
 
-        bd = getOverIcon(name);
+//        bd = getOverIcon(name);
 
 
         //获取经纬度
