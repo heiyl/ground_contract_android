@@ -167,7 +167,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
 
         setToolBarLeftTitleColor(R.color.colorAccent);
         setToolBarRightTitleColor(R.color.colorAccent);
-        initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "添加经纬度", "提交", new View.OnClickListener() {
+        initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "添加经纬度", "发布", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!UIUtils.isFastChangeClick()){
