@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroupOverlay;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,10 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.Polygon;
+import com.baidu.mapapi.map.PolygonOptions;
+import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.model.LatLng;
 import com.common.library.tools.grant.PermissionsPageManager;
 import com.diyuewang.m.R;
@@ -67,6 +72,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
 
     BitmapDescriptor bd = BitmapDescriptorFactory
             .fromResource(R.mipmap.icon_gcoding);
+    private Polygon polygon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,6 +142,37 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         locationInfoList.add(locationInfo);
 
 
+    }
+
+    /**
+     * 添加区域
+     */
+    protected void overlaySize(){
+        if(locationInfoList != null && locationInfoList.size() >= 3){
+            removeOverlaySize();
+            List<LatLng> pts = new ArrayList<LatLng>();
+            for (int i = 0; i < locationInfoList.size(); i++){
+                LatLng pt = new LatLng(locationInfoList.get(i).getLatitude(), locationInfoList.get(i).getLongitude());
+                pts.add(pt);
+            }
+            //构建用户绘制多边形的Option对象
+            OverlayOptions polygonOption = new PolygonOptions()
+                    .points(pts)
+                    .stroke(new Stroke(5, 0xAA00FF00))
+                    .fillColor(0xAAFFFF00);
+
+            //在地图上添加多边形Option，用于显示
+            polygon = (Polygon) mBaiduMap.addOverlay(polygonOption);
+        }else{
+            removeOverlaySize();
+        }
+    }
+
+    private void removeOverlaySize() {
+        if(polygon != null){
+            polygon.remove();
+            polygon = null;
+        }
     }
 
     private BitmapDescriptor getOverIcon(String name){

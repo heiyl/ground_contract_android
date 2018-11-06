@@ -172,6 +172,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
             public void onClick(View v) {
                 if(!UIUtils.isFastChangeClick()){
                     setOverlay();
+                    overlaySize();
                     setLocationCount();
                 }
             }
@@ -256,6 +257,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     private void resetData() {
         locationInfoList.clear();
         mBaiduMap.clear();
+        overlaySize();
         setLocationCount();
     }
 
@@ -390,6 +392,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                     public void onSure() {
                         locationInfoList.remove(markerInfo);
                         marker.remove();
+                        overlaySize();
                         setLocationCount();
                     }
                     @Override
