@@ -88,6 +88,5 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.contrarywind:wheelview:4.0.8'
     implementation files('libs/BaiduLBS_Android.jar')
-    //    implementation(name: 'library', ext: 'aar')
-    implementation project(':library')
+    implementation(name: 'library', ext: 'aar')
 }
