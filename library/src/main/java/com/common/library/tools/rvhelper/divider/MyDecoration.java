@@ -1,4 +1,4 @@
-package com.diyuewang.m.tools.rvhelper.divider;
+package com.common.library.tools.rvhelper.divider;
 
 import android.content.Context;
 import android.content.res.TypedArray;

@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroupOverlay;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +37,6 @@ import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.model.LatLng;
 import com.common.library.tools.grant.PermissionsPageManager;
 import com.diyuewang.m.R;
-import com.diyuewang.m.model.LocationInfo;
 import com.diyuewang.m.model.MarkerInfoUtil;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;

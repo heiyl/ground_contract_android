@@ -1,14 +1,14 @@
-package com.diyuewang.m.tools.rvhelper.adapter;
+package com.common.library.tools.rvhelper.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 
-import com.diyuewang.m.tools.rvhelper.base.ItemViewDelegate;
-import com.diyuewang.m.tools.rvhelper.base.ViewHolder;
+
+import com.common.library.tools.rvhelper.base.ItemViewDelegate;
+import com.common.library.tools.rvhelper.base.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**

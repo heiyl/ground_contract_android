@@ -1,4 +1,4 @@
-package com.diyuewang.m.tools.rvhelper.adapter;
+package com.common.library.tools.rvhelper.adapter;
 
 import android.content.Context;
 import android.graphics.Canvas;

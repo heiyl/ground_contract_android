@@ -5,10 +5,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.baidu.mapapi.map.Marker;
+import com.common.library.tools.rvhelper.adapter.CommonAdapter;
+import com.common.library.tools.rvhelper.base.ViewHolder;
 import com.diyuewang.m.R;
 import com.diyuewang.m.model.MarkerInfoUtil;
-import com.diyuewang.m.tools.rvhelper.adapter.CommonAdapter;
-import com.diyuewang.m.tools.rvhelper.base.ViewHolder;
 
 public class MarketAdapter  extends CommonAdapter<MarkerInfoUtil> {
     public int selectedPosition;

@@ -1,4 +1,4 @@
-package com.diyuewang.m.tools.rvhelper.base;
+package com.common.library.tools.rvhelper.base;
 
 
 /**

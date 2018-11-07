@@ -1,4 +1,4 @@
-package com.diyuewang.m.tools.rvhelper.wrapper;
+package com.common.library.tools.rvhelper.wrapper;
 
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -6,9 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.diyuewang.m.tools.rvhelper.adapter.MultiItemTypeAdapter;
-import com.diyuewang.m.tools.rvhelper.base.ViewHolder;
-import com.diyuewang.m.tools.rvhelper.utils.WrapperUtils;
+import com.common.library.tools.rvhelper.adapter.MultiItemTypeAdapter;
+import com.common.library.tools.rvhelper.base.ViewHolder;
+import com.common.library.tools.rvhelper.utils.WrapperUtils;
 
 
 /**

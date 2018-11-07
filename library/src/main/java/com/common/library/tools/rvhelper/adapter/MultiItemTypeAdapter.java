@@ -1,17 +1,17 @@
-package com.diyuewang.m.tools.rvhelper.adapter;
+package com.common.library.tools.rvhelper.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.diyuewang.m.tools.rvhelper.base.ItemViewDelegate;
-import com.diyuewang.m.tools.rvhelper.base.ItemViewDelegateManager;
-import com.diyuewang.m.tools.rvhelper.base.ViewHolder;
+
+import com.common.library.tools.rvhelper.base.ItemViewDelegate;
+import com.common.library.tools.rvhelper.base.ItemViewDelegateManager;
+import com.common.library.tools.rvhelper.base.ViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 
 /**

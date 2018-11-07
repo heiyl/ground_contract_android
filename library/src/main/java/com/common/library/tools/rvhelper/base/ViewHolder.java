@@ -1,4 +1,4 @@
-package com.diyuewang.m.tools.rvhelper.base;
+package com.common.library.tools.rvhelper.base;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 
 
 public class ViewHolder extends RecyclerView.ViewHolder {

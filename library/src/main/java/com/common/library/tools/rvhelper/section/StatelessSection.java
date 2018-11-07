@@ -1,9 +1,9 @@
-package com.diyuewang.m.tools.rvhelper.section;
+package com.common.library.tools.rvhelper.section;
 
 import android.content.Context;
 import android.view.View;
 
-import com.diyuewang.m.tools.rvhelper.base.ViewHolder;
+import com.common.library.tools.rvhelper.base.ViewHolder;
 
 
 /**
