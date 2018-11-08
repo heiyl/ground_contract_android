@@ -308,7 +308,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                 builder.target(ll).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
             }
-            getLocationType(location);
+//            getLocationType(location);
         }
     }
 
