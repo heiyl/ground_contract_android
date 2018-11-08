@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -50,7 +51,8 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
 
     // 定位相关
     protected LocationClient mLocClient;
-    protected final MyLocationListenner myListener = new MyLocationListenner();
+//    protected final MyLocationListenner myListener = new MyLocationListenner();
+    protected final MyBdLocationListenner myListener = new MyBdLocationListenner();
     protected LocationMode mCurrentMode;
     protected BitmapDescriptor mCurrentMarker;
     protected static final int accuracyCircleFillColor = 0xAAFFFF88;
@@ -87,11 +89,15 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         mLocClient = new LocationClient(this);
         mLocClient.registerLocationListener(myListener);
         LocationClientOption option = new LocationClientOption();
+        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
         option.setOpenGps(true); // 打开gps
+        option.setPriority(LocationClientOption.GpsFirst); //设置gps优先
         option.setLocationNotify(true);//可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
         option.setCoorType("bd09ll"); // 设置坐标类型
         option.setScanSpan(1000);
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
+        option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
+        option.setWifiCacheTimeOut(5*60*1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
         changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);
@@ -270,6 +276,38 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
+        }
+    }
+    /**
+     * 定位SDK监听函数
+     */
+    private class MyBdLocationListenner extends BDAbstractLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            // map view 销毁后不在处理新接收的位置
+            if (location == null || mMapView == null) {
+                return;
+            }
+            mCurrentLat = location.getLatitude();
+            mCurrentLon = location.getLongitude();
+            mCurrentAccracy = location.getRadius();
+            locData = new MyLocationData.Builder()
+                    .accuracy(location.getRadius())
+                    // 此处设置开发者获取到的方向信息，顺时针0-360
+                    .direction(mCurrentDirection).latitude(location.getLatitude())
+                    .longitude(location.getLongitude()).build();
+            mBaiduMap.setMyLocationData(locData);
+            if (isFirstLoc) {
+                isFirstLoc = false;
+                setAdress(location);
+
+                LatLng ll = new LatLng(location.getLatitude(),
+                        location.getLongitude());
+                MapStatus.Builder builder = new MapStatus.Builder();
+                builder.target(ll).zoom(18.0f);
+                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+            }
         }
     }
 
