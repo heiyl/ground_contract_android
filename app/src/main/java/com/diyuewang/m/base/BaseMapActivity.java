@@ -308,6 +308,43 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                 builder.target(ll).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
             }
+            getLocationType(location);
+        }
+    }
+
+    private void getLocationType(BDLocation location) {
+        if (location.getLocType() == BDLocation.TypeGpsLocation){
+
+            UIUtils.showToastInCenter("GPS: 卫星数为" + location.getSatelliteNumber());
+            //当前为GPS定位结果，可获取以下信息
+            location.getSpeed();    //获取当前速度，单位：公里每小时
+            location.getSatelliteNumber();    //获取当前卫星数
+            location.getAltitude();    //获取海拔高度信息，单位米
+            location.getDirection();    //获取方向信息，单位度
+
+        } else if (location.getLocType() == BDLocation.TypeNetWorkLocation){
+            UIUtils.showToastInCenter("NET: 运营商为" + location.getOperators());
+            //当前为网络定位结果，可获取以下信息
+            location.getOperators();    //获取运营商信息
+
+        } else if (location.getLocType() == BDLocation.TypeOffLineLocation) {
+            UIUtils.showToastInCenter("NET: TypeOffLineLocation");
+            //当前为网络定位结果
+
+        } else if (location.getLocType() == BDLocation.TypeServerError) {
+            UIUtils.showToastInCenter("ERROR: 当前网络定位失败");
+            //当前网络定位失败
+            //可将定位唯一ID、IMEI、定位失败时间反馈至loc-bugs@baidu.com
+
+        } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+            UIUtils.showToastInCenter("EXCEPTION: 当前网络不通");
+            //当前网络不通
+
+        } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+            UIUtils.showToastInCenter("EXCEPTION: 可能是用户没有授权");
+            //当前缺少定位依据，可能是用户没有授权，建议弹出提示框让用户开启权限
+            //可进一步参考onLocDiagnosticMessage中的错误返回码
+
         }
     }
 
