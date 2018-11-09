@@ -263,7 +263,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             //双击退出
             long secondTime = System.currentTimeMillis();
             if (secondTime - firstTime > 1000) {
