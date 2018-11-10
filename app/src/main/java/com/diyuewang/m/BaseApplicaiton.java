@@ -9,6 +9,7 @@ import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.diyuewang.m.constants.Constants;
 import com.diyuewang.m.model.UserDto;
+import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
@@ -56,7 +57,7 @@ public class BaseApplicaiton extends Application {
     }
 
     private void initBugly(){
-        CrashReport.initCrashReport(getApplicationContext(), "5d92acddad", true);
+        Bugly.init(getApplicationContext(), "5d92acddad", true);
     }
 
 
