@@ -169,3 +169,8 @@
 -dontwarn com.baidu.**
 
 ##---------------End:  BAIDU MAP  ----------
+
+##---------------Begin:  bugly  ----------
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+##---------------End:  bugly  ----------

@@ -9,6 +9,7 @@ import com.baidu.mapapi.CoordType;
 import com.baidu.mapapi.SDKInitializer;
 import com.diyuewang.m.constants.Constants;
 import com.diyuewang.m.model.UserDto;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
 import cn.finalteam.okhttpfinal.OkHttpFinalConfiguration;
@@ -44,6 +45,7 @@ public class BaseApplicaiton extends Application {
         mMainThreadId = android.os.Process.myTid();
         // 创建主线程的handler
         mMainHandler = new Handler();
+        initBugly();
         initBaiduMap();
         new Thread(new Runnable() {
             @Override
@@ -52,6 +54,11 @@ public class BaseApplicaiton extends Application {
             }
         }).start();
     }
+
+    private void initBugly(){
+        CrashReport.initCrashReport(getApplicationContext(), "5d92acddad", true);
+    }
+
 
     private void initBaiduMap() {
         // 在使用 SDK 各组间之前初始化 context 信息，传入 ApplicationContext
