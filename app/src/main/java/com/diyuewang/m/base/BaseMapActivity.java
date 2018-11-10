@@ -97,7 +97,6 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         option.setScanSpan(1000);
         option.setIsNeedAddress(true);//可选，设置是否需要地址信息，默认不需要
         option.setEnableSimulateGps(false);//可选，默认false，设置是否需要过滤GPS仿真结果，默认需要
-        option.setWifiCacheTimeOut(5*60*1000);
         mLocClient.setLocOption(option);
         mLocClient.start();
         changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);

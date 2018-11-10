@@ -15,7 +15,7 @@ public class API {
                 break;
             default:
                 isDebug = Boolean.FALSE;
-                HOST = "http://112.124.2.5:8080/diyue/"; // 正式地址
+                HOST = "http://api.diyuewang.com/"; // 正式地址
                 break;
 
         }
