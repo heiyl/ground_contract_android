@@ -170,7 +170,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
             double area = BDMapTools.getTotalArea(pts);
             double size = area / 667;
             UIUtils.showToastInCenter("所选区域面积："+size +"亩");
-            getOverlayArea(area,true);
+            getOverlayArea(size,true);
         }else{
             getOverlayArea(0,false);
             removeOverlaySize();
