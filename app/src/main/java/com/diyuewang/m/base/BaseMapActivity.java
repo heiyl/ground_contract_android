@@ -41,6 +41,7 @@ import com.diyuewang.m.R;
 import com.diyuewang.m.model.MarkerInfoUtil;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
+import com.diyuewang.m.tools.helper.BDMapTools;
 import com.diyuewang.m.ui.dialog.simpledialog.DialogUtils;
 import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
 
@@ -169,8 +170,8 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         }else{
             removeOverlaySize();
         }
-//        double area = getArea(pts);
-//        UIUtils.showToastInCenter(area +"平方米");
+        double area = BDMapTools.getTotalArea(pts);
+        UIUtils.showToastInCenter(area +"平方米");
 
     }
 
