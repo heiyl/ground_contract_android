@@ -74,11 +74,10 @@ public class BDMapTools {
     //计算周长
 //    double perimeter = this.getPerimeter(points);
     //转化点到LatLng
-    List<LatLng> latLngs = new ArrayList<>();
     if(pts == null || pts.size() < 3){
       return area;
     }
-    area = Double.valueOf(getAreaProtected(latLngs));
+    area = Double.valueOf(getAreaProtected(pts));
     return area;
   }
 

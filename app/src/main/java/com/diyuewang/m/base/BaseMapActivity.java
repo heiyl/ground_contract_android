@@ -167,13 +167,18 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
 
             //在地图上添加多边形Option，用于显示
             polygon = (Polygon) mBaiduMap.addOverlay(polygonOption);
+            double area = BDMapTools.getTotalArea(pts);
+            double size = area / 667;
+            UIUtils.showToastInCenter("所选区域面积："+size +"亩");
+            getOverlayArea(area,true);
         }else{
+            getOverlayArea(0,false);
             removeOverlaySize();
         }
-        double area = BDMapTools.getTotalArea(pts);
-        UIUtils.showToastInCenter(area +"平方米");
 
     }
+
+    protected abstract void getOverlayArea(double area,boolean isHave);
 
     private void removeOverlaySize() {
         if(polygon != null){

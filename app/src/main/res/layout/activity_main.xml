@@ -21,7 +21,8 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -381,4 +382,13 @@
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
+    <TextView
+        android:id="@+id/tv_total_size"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_23"
+        android:background="@color/colorAccent"
+        android:gravity="center"
+        android:textSize="@dimen/app_font_size_12"
+        android:textColor="@color/white" />
 </LinearLayout>

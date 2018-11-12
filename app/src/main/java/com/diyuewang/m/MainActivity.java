@@ -84,6 +84,10 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     @BindView(R.id.tv_count)
     TextView tv_count;
 
+    //面积
+    @BindView(R.id.tv_total_size)
+    TextView tv_total_size;
+
     //经纬度个数
     @BindView(R.id.rv_view)
     RecyclerView rv_view;
@@ -109,6 +113,16 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         initView();
         initMap();
         initAdapter();
+    }
+
+    @Override
+    protected void getOverlayArea(double area,boolean isHave) {
+        if(isHave){
+            tv_total_size.setVisibility(View.VISIBLE);
+            tv_total_size.setText("所选区域面积："+area +"亩");
+        }else{
+            tv_total_size.setVisibility(View.GONE);
+        }
     }
 
     private void initAdapter() {
