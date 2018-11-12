@@ -1,0 +1,10 @@
+<resources>
+
+    <style name="Theme.AppStartLoadTranslucent" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <!-- 适配android手机系统8.0(api26)，Only fullscreen opaque activities can request orientation -->
+        <!--用背景图消除启动白屏-->
+        <item name="android:windowIsTranslucent">false</item>
+    </style>
+</resources>
