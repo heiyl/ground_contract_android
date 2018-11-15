@@ -169,8 +169,9 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
             polygon = (Polygon) mBaiduMap.addOverlay(polygonOption);
             double area = BDMapTools.getTotalArea(pts);
             double size = area / 667;
-            UIUtils.showToastInCenter("所选区域面积："+size +"亩");
-            getOverlayArea(size,true);
+            double finalSize = Math.abs(size);
+            UIUtils.showToastInCenter("所选区域面积："+finalSize +"亩");
+            getOverlayArea(finalSize,true);
         }else{
             getOverlayArea(0,false);
             removeOverlaySize();
