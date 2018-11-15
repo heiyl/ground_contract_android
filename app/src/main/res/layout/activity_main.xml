@@ -259,7 +259,6 @@
                     android:gravity="center_vertical|right"
                     android:hint="请输入土地面积"
                     android:inputType="numberDecimal"
-                    android:digits="0123456789."
                     android:paddingLeft="@dimen/dp_8"
                     android:paddingRight="@dimen/dp_8"
                     android:textColor="@color/color_252B3B"
