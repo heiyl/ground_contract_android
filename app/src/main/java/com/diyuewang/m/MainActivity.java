@@ -9,12 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.common.library.business.FinalHttpRequestCallback;
 import com.common.library.model.ResultDto;
 import com.common.library.tools.rvhelper.divider.RecycleViewDivider;
@@ -418,5 +420,50 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     @Override
     public void removeMarekt(MarkerInfoUtil markerInfoUtil,Marker marker) {
         showDelMarketDialog(markerInfoUtil,marker);
+    }
+
+    /**
+     * 设置底图显示模式
+     *
+     * @param view
+     */
+    public void setMapMode(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.normal:
+                if (checked) {
+                    mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+                }
+                break;
+            case R.id.statellite:
+                if (checked) {
+                    mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    /**
+     * 设置底图显示模式
+     *
+     * @param view
+     */
+    public void setMapLocationMode(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+        switch (view.getId()) {
+            case R.id.FOLLOWING:
+                if (checked) {
+                    changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);
+                }
+                break;
+            case R.id.COMPASS:
+                if (checked) {
+                    changeLocationMode(MyLocationConfiguration.LocationMode.FOLLOWING);
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
