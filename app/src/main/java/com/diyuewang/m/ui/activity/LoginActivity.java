@@ -131,7 +131,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
 
             String phone = edtUserNmae.getText().toString().trim();
 
-            if (!TextUtils.isEmpty(phone) && StringUtils.isPhone(phone) && !TextUtils.isEmpty(edtSmsCode.getText().toString().trim())) {
+            if (!TextUtils.isEmpty(phone) && StringUtils.isMobilePhoneSimple(phone) && !TextUtils.isEmpty(edtSmsCode.getText().toString().trim())) {
                 btn_login.setEnabled(true);
             } else {
                 btn_login.setEnabled(false);
@@ -235,7 +235,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
 
     private void getRegCode() {
         mPhone = edtUserNmae.getText().toString().trim();
-        if (!StringUtils.isEmpty(mPhone) && StringUtils.isPhone(mPhone)) {
+        if (!StringUtils.isEmpty(mPhone) && StringUtils.isMobilePhoneSimple(mPhone)) {
             canClickAble = false;
             SmsUtil.sendLoginSms(this, mPhone, new SmsUtil.SendSmsCallBack() {
 
