@@ -88,7 +88,8 @@
             android:launchMode="singleTop"/>
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"/>
         <activity
             android:name=".ui.activity.LoginActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />

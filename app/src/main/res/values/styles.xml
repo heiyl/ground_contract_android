@@ -34,4 +34,14 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="MapRGStyle">
+        <item name="android:button">@null</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/map_rg_text</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
 </resources>

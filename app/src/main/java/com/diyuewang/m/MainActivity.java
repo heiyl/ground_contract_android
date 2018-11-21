@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -81,6 +82,10 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     //手机号
     @BindView(R.id.edt_name_content)
     AppCompatEditText edt_name_content;
+
+    //经纬度个数
+    @BindView(R.id.iv_add)
+    ImageView iv_add;
 
     //经纬度个数
     @BindView(R.id.tv_count)
@@ -180,10 +185,19 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         mMapView = this.findViewById(R.id.bmapView);
         rl_select_type.setOnClickListener(this);
         tv_count.setOnClickListener(this);
+        iv_add.setOnClickListener(this);
 
-        setToolBarLeftTitleColor(R.color.colorAccent);
+//        setToolBarLeftTitleColor(R.color.colorAccent);
         setToolBarRightTitleColor(R.color.colorAccent);
-        initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "添加经纬度", "发布", new View.OnClickListener() {
+        initToolBarRightTxt(UIUtils.getString(R.string.title_main),"发布",new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(canSubmit()){
+                    submit();
+                }
+            }
+        },false);
+        /*initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "添加经纬度", "发布", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!UIUtils.isFastChangeClick()){
@@ -199,13 +213,13 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                     submit();
                 }
             }
-        });
+        });*/
     }
 
     private void setLocationCount(){
         if(locationInfoList != null && locationInfoList.size() > 0){
             tv_count.setVisibility(View.VISIBLE);
-            tv_count.setText("您当前已添加经纬度个数: " + locationInfoList.size() + "      >>");
+            tv_count.setText("清除已添加的" + locationInfoList.size() + "个点");
         }else{
             tv_count.setVisibility(View.GONE);
         }
@@ -318,6 +332,13 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                 break;
             case R.id.tv_count:
                 showResetDialog();
+                break;
+            case R.id.iv_add:
+                if(!UIUtils.isFastChangeClick()){
+                    setOverlay();
+                    overlaySize();
+                    setLocationCount();
+                }
                 break;
         }
     }
