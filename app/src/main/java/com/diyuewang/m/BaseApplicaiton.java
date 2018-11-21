@@ -11,7 +11,6 @@ import com.baidu.mapapi.SDKInitializer;
 import com.diyuewang.m.constants.Constants;
 import com.diyuewang.m.model.UserDto;
 import com.tencent.bugly.Bugly;
-import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.sdk.QbSdk;
 
 import cn.finalteam.okhttpfinal.OkHttpFinal;
