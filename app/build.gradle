@@ -11,7 +11,7 @@ android {
 
         ndk {
             // 设置支持的SO库架构
-            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+            abiFilters 'armeabi' , 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a', "mips"
         }
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -77,6 +77,12 @@ android {
         }
     }
 
+    allprojects {
+        repositories {
+            maven { url 'https://jitpack.io' }
+        }
+    }
+
 }
 
 dependencies {
@@ -95,8 +101,10 @@ dependencies {
     implementation 'com.contrarywind:wheelview:4.0.8'
     implementation files('libs/BaiduLBS_Android.jar')
     implementation(name: 'library', ext: 'aar')
+    implementation 'com.github.wendux:DSBridge-Android:x5-3.0-SNAPSHOT'
 
     implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    implementation project(path: ':web_ibrary') //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
 
 }
