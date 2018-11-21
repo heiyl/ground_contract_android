@@ -134,7 +134,11 @@ public class AccountUtil {
      */
     public static void startApp(Context context) {
         if (AccountUtil.isLogin(context)) {
-            IntentManager.startMainActivity(context);
+            if(AccountUtil.getLoginUserDto().loginType == 0){
+                IntentManager.startBrowActivity(context);
+            }else{
+                IntentManager.startMainActivity(context);
+            }
         } else {
             IntentManager.startLoginActivity(context);
         }

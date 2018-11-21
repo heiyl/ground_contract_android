@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.common.library.model.ResultDto;
@@ -53,11 +54,20 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
     @BindView(R.id.username)
     AppCompatEditText edtUserNmae;
 
+    @BindView(R.id.edt_sms_code_close)
+    AppCompatEditText edtSmsCodeClose;
+
     @BindView(R.id.edt_sms_code)
     AppCompatEditText edtSmsCode;
 
+    @BindView(R.id.llt_normal_login)
+    LinearLayout llt_normal_login;
+
     @BindView(R.id.tv_get_sms_code)
     TextView tvGetSmsCode;
+
+    @BindView(R.id.tv_change_login)
+    TextView tvChangeLogin;
 
     public static final int MSG_ID_DEFAULT = 0;
 
@@ -65,6 +75,8 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
     private boolean canClickAble = true;
     private int countDownSecond = 60;
     private String mPhone;
+
+    private int loginType = Constants.LOGIN_TYPE_NORMAL;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -108,10 +120,29 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
         ButterKnife.bind(this);
         tvGetSmsCode.setOnClickListener(this);
         btn_login.setOnClickListener(this);
+        tvChangeLogin.setOnClickListener(this);
         edtUserNmae.addTextChangedListener(new EditChangedListener());
         edtSmsCode.addTextChangedListener(new EditChangedListener());
+        edtSmsCodeClose.addTextChangedListener(new EditChangedListener());
+        changeLoginType();
 
+    }
 
+    private void changeLoginType() {
+        switch (loginType) {
+            case Constants.LOGIN_TYPE_NORMAL:
+                llt_normal_login.setVisibility(View.VISIBLE);
+                edtSmsCode.setVisibility(View.GONE);
+                tvChangeLogin.setText("员工登陆");
+                break;
+            case Constants.LOGIN_TYPE_CODE:
+                llt_normal_login.setVisibility(View.GONE);
+                edtSmsCode.setVisibility(View.VISIBLE);
+                tvChangeLogin.setText("短信登陆");
+                break;
+            default:
+                break;
+        }
     }
 
     private class EditChangedListener implements TextWatcher {
@@ -131,10 +162,18 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
 
             String phone = edtUserNmae.getText().toString().trim();
 
-            if (!TextUtils.isEmpty(phone) && StringUtils.isMobilePhoneSimple(phone) && !TextUtils.isEmpty(edtSmsCode.getText().toString().trim())) {
-                btn_login.setEnabled(true);
-            } else {
-                btn_login.setEnabled(false);
+            if(loginType == Constants.LOGIN_TYPE_CODE){
+                if (!TextUtils.isEmpty(phone) && StringUtils.isMobilePhoneSimple(phone) && !TextUtils.isEmpty(edtSmsCode.getText().toString().trim())) {
+                    btn_login.setEnabled(true);
+                } else {
+                    btn_login.setEnabled(false);
+                }
+            }else{
+                if (!TextUtils.isEmpty(phone) && StringUtils.isMobilePhoneSimple(phone) && !TextUtils.isEmpty(edtSmsCodeClose.getText().toString().trim())) {
+                    btn_login.setEnabled(true);
+                } else {
+                    btn_login.setEnabled(false);
+                }
             }
         }
     }
@@ -150,18 +189,36 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             case R.id.btn_login://登录
                 login_btn_Click();
                 break;
+            case R.id.tv_change_login://change login view
+                if (loginType == Constants.LOGIN_TYPE_NORMAL) {
+                    loginType = Constants.LOGIN_TYPE_CODE;
+                } else if (loginType == Constants.LOGIN_TYPE_CODE) {
+                    loginType = Constants.LOGIN_TYPE_NORMAL;
+                }
+                changeLoginType();
+                break;
         }
     }
 
     private void login_btn_Click() {
         mPhone = edtUserNmae.getText().toString().trim();
         String sms = edtSmsCode.getText().toString().trim();
+        String code = edtSmsCodeClose.getText().toString().trim();
 
         RequestParams params = new RequestParams();
-        params.addFormDataPart("phone", mPhone);
-        params.addFormDataPart("pwd", sms);
+        String URL = "";
+        if(loginType == Constants.LOGIN_TYPE_CODE){
+            params.addFormDataPart("phone", mPhone);
+            params.addFormDataPart("pwd", sms);
+            URL = API.USER_LOGIN;
+        }else if(loginType == Constants.LOGIN_TYPE_NORMAL){
+            params.addFormDataPart("phoneNo", mPhone);
+            params.addFormDataPart("valCode", code);
+            URL = API.SMS_VAL;
+        }
+
         LoadingDialogClass.showLodDialog(LoginActivity.this, "登陆中...");
-        HttpRequest.post(API.USER_LOGIN, params, new BaseHttpRequestCallback<UserDto>() {
+        HttpRequest.post(URL, params, new BaseHttpRequestCallback<UserDto>() {
             @Override
             public void onStart() {
                 super.onStart();
@@ -175,14 +232,20 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             @Override
             protected void onSuccess(UserDto resp) {
                 super.onSuccess(resp);
+                if(loginType == Constants.LOGIN_TYPE_CODE){
+                    resp.loginType = 1;
+                }else if(loginType == Constants.LOGIN_TYPE_NORMAL){
+                    resp.loginType = 0;
+                }
                 try {
                     if (resp.code == Constants.REQ_RESPOSE_CODE) {
+
                         Gson gson = new Gson();
                         String content = gson.toJson(resp);
                         try {
                             if (AccountUtil.saveLoginuserDto(content, LoginActivity.this)) {
-                                LoadingDialogClass.closeLodDialog();
                                 AccountUtil.startApp(activity);
+                                LoadingDialogClass.closeLodDialog();
                                 back();
                                 overridePendingTransition(0, 0);
                             } else {
@@ -209,6 +272,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             @Override
             public void onFailure(int errorCode, String msg) {
                 LoadingDialogClass.closeLodDialog();
+                UIUtils.showToastInCenter("登陆异常");
                 super.onFailure(errorCode, msg);
             }
         });
