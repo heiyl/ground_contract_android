@@ -65,7 +65,7 @@ public class StatusBarUtil {
      * 适配4.4以上版本MIUIV、Flyme和6.0以上版本其他Android
      *
      * @param activity
-     * @return 1:MIUUI 2:Flyme 3:android6.0
+     * @return 1:MIUUI 2:Flyme 3:android6.0 4:OPPO
      */
     public static int StatusBarLightMode(Activity activity) {
         int result = 0;
@@ -77,6 +77,8 @@ public class StatusBarUtil {
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
                 result = 3;
+            } else if (Build.MANUFACTURER.equalsIgnoreCase("OPPO")) {
+                result = 4;
             }
         }
         return result;
@@ -88,7 +90,7 @@ public class StatusBarUtil {
      * 适配4.4以上版本MIUIV、Flyme和6.0以上版本其他Android
      *
      * @param activity
-     * @param type     1:MIUUI 2:Flyme 3:android6.0
+     * @param type     1:MIUUI 2:Flyme 3:android6.0  4:OPPO
      */
     public static void StatusBarLightMode(Activity activity, int type) {
         if (type == 1) {
@@ -97,8 +99,38 @@ public class StatusBarUtil {
             FlymeSetStatusBarLightMode(activity.getWindow(), true);
         } else if (type == 3) {
             activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        } else if (type == 4) {
+            setOPPOStatusTextColor(true, activity);
         }
 
+    }
+
+    /**
+     * 设置OPPO手机状态栏字体为黑色(colorOS3.0,6.0以下部分手机)
+     *
+     * @param lightStatusBar
+     * @param activity
+     */
+    private static final int SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT = 0x00000010;
+
+    private static void setOPPOStatusTextColor(boolean lightStatusBar, Activity activity) {
+        Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        int vis = window.getDecorView().getSystemUiVisibility();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (lightStatusBar) {
+                vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            } else {
+                vis &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (lightStatusBar) {
+                vis |= SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT;
+            } else {
+                vis &= ~SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT;
+            }
+        }
+        window.getDecorView().setSystemUiVisibility(vis);
     }
 
     /**

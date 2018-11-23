@@ -187,24 +187,20 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         tv_count.setOnClickListener(this);
         iv_add.setOnClickListener(this);
 
-//        setToolBarLeftTitleColor(R.color.colorAccent);
+        setToolBarLeftTitleColor(R.color.colorAccent);
         setToolBarRightTitleColor(R.color.colorAccent);
-        initToolBarRightTxt(UIUtils.getString(R.string.title_main),"发布",new View.OnClickListener() {
+        /*initToolBarRightTxt(UIUtils.getString(R.string.title_main),"发布",new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(canSubmit()){
                     submit();
                 }
             }
-        },false);
-        /*initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "添加经纬度", "发布", new View.OnClickListener() {
+        },false);*/
+        initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "注销", "发布", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!UIUtils.isFastChangeClick()){
-                    setOverlay();
-                    overlaySize();
-                    setLocationCount();
-                }
+                AccountUtil.logOut(MainActivity.this);
             }
         }, new View.OnClickListener() {
             @Override
@@ -213,7 +209,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                     submit();
                 }
             }
-        });*/
+        });
     }
 
     private void setLocationCount(){

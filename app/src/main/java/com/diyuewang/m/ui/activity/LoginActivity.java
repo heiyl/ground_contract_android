@@ -116,7 +116,7 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
 
     private void initViews() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        initStatusBar(false);
+        initStatusBar(true);
         ButterKnife.bind(this);
         tvGetSmsCode.setOnClickListener(this);
         btn_login.setOnClickListener(this);
