@@ -11,6 +11,10 @@ import com.common.library.base.BaseActivity;
 import com.common.library.tools.DrawableUtil;
 import com.diyuewang.m.R;
 import com.diyuewang.m.tools.LogManager;
+import com.diyuewang.m.tools.UIUtils;
+import com.diyuewang.m.tools.helper.AccountUtil;
+import com.diyuewang.m.ui.dialog.simpledialog.DialogUtils;
+import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
 
 
 /**
@@ -367,5 +371,24 @@ public abstract class BaseToolBarActivity extends BaseActivity {
         } else {
             diver.setVisibility(View.GONE);
         }
+    }
+
+    protected void showLogOUtDialog(final boolean isMain) {
+        DialogUtils.getInstance().initSimpleDialog(activity, true)
+                .setTitle(UIUtils.getString(R.string.dialog_logout_title))
+                .setContent("您确定要退出登陆吗？")
+                .setSureText(UIUtils.getString(R.string.dialog_sure))
+                .setCanceledOnTouchOutside(false)
+//                .setCancelable(false)
+                .setOnSimpleDialogClick(new SimpleDialog.OnSimpleDialogClick() {
+                    @Override
+                    public void onSure() {
+                        AccountUtil.logOut(activity,isMain);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+                }).show();
     }
 }

@@ -28,7 +28,7 @@ public class API {
     /**
      * 短信验证
      */
-    public static final String SMS_VAL = HOST + "main/val.shtml";
+    public static final String SMS_VAL = HOST + "user/login/phone/val.shtml";
     /**
      * 用户登录
      */

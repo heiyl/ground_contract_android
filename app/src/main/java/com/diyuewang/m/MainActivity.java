@@ -106,6 +106,10 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     @BindView(R.id.RadioGroup_right)
     RadioGroup RadioGroup_right;
 
+    @BindView(R.id.iv_logout)
+    ImageView ivLogOUt;
+
+
     private MarketAdapter adapter;
 
     private long firstTime = 1;
@@ -189,6 +193,14 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     }
 
     private void initView() {
+
+        ivLogOUt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLogOUtDialog(true);
+            }
+        });
+
         mMapView = this.findViewById(R.id.bmapView);
         rl_select_type.setOnClickListener(this);
         tv_count.setOnClickListener(this);

@@ -9,10 +9,13 @@ import com.common.library.tools.aes.AESOperator;
 import com.common.library.tools.helper.AccountHelper;
 import com.diyuewang.m.BaseApplicaiton;
 import com.diyuewang.m.MainActivity;
+import com.diyuewang.m.constants.Constants;
 import com.diyuewang.m.model.Employee;
+import com.diyuewang.m.model.User;
 import com.diyuewang.m.model.UserDto;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
+import com.diyuewang.m.ui.activity.BrowserActivity;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -33,12 +36,16 @@ public class AccountUtil {
         return AccountHelper.isLogin(context);
     }
 
-    public static void logOut(Activity context) {
+    public static void logOut(Activity context,boolean isMain) {
         boolean logOut = AccountHelper.logOut(context);
         if(logOut){
             //TODO 常驻数据修改
             BaseApplicaiton.loginUserDto = null;
-            ActivityStackManager.getInstance().finishToActivity(MainActivity.class, true);
+            if(isMain){
+                ActivityStackManager.getInstance().finishToActivity(MainActivity.class, true);
+            }else{
+                ActivityStackManager.getInstance().finishToActivity(BrowserActivity.class, true);
+            }
             IntentManager.startLoginActivity(context);
         }
     }
@@ -68,6 +75,18 @@ public class AccountUtil {
         }
         return userInfo;
     }
+    /**
+     * 获取用户信息
+     *
+     * @return
+     */
+    public static User getUser() {
+        User userInfo = null;
+        if (getLoginUserDto() != null && getLoginUserDto().data != null && getLoginUserDto().data.user != null) {
+            userInfo = getLoginUserDto().data.user;
+        }
+        return userInfo;
+    }
 
     /**
      * 获取用户信息
@@ -76,9 +95,18 @@ public class AccountUtil {
      */
     public static String getUserId() {
         String userId = "";
-        Employee userInfo = null;
-        if (getEmployee() != null) {
-            userId = getEmployee().id;
+        if(getLoginUserDto().loginType == Constants.LOGIN_TYPE_NORMAL){
+            User user = null;
+            if(getUser() != null){
+                userId = getUser().id;
+            }
+
+        }else{
+
+            Employee userInfo = null;
+            if (getEmployee() != null) {
+                userId = getEmployee().id;
+            }
         }
         return userId;
     }

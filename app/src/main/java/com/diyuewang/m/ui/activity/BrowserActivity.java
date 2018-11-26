@@ -6,14 +6,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.common.library.tools.status_bar.StatusBarUtil;
 import com.common.web_ibrary.customwebview.x5webview.X5WebView;
 import com.diyuewang.m.R;
 import com.diyuewang.m.base.BaseToolBarActivity;
+import com.diyuewang.m.constants.API;
 import com.diyuewang.m.tools.LogManager;
+import com.diyuewang.m.tools.helper.AccountUtil;
+
+import java.util.HashMap;
+import java.util.Iterator;
+
+import cn.finalteam.okhttpfinal.RequestParams;
 
 
 /**
@@ -24,6 +33,8 @@ public class BrowserActivity extends BaseToolBarActivity {
     //内容显示区域
     private FrameLayout center_layout;
     private X5WebView mX5WebView;
+    private ImageView ivLogOUt;
+    private String URL = "http://m.diyuewang.com";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +71,14 @@ public class BrowserActivity extends BaseToolBarActivity {
             showContacts();
         }*/
         //内容显示区域
+        ivLogOUt = (ImageView) findViewById(R.id.iv_logout);
+
+        ivLogOUt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showLogOUtDialog(false);
+            }
+        });
         center_layout = (FrameLayout) findViewById(R.id.center_layout);
 
         mX5WebView = new X5WebView(this, null);
@@ -71,7 +90,16 @@ public class BrowserActivity extends BaseToolBarActivity {
     private void initDatas() {
         mX5WebView.setCanBackPreviousPage(true, BrowserActivity.this);//设置可返回上一页
 
-        mX5WebView.loadUrl("http://m.diyuewang.com/");
+        HashMap<String, String> params = new HashMap<>();
+        params.put("id",AccountUtil.getUserId());
+        params.put("phone",AccountUtil.getLoginUserDto().data.user.phone);
+        params.put("sex",AccountUtil.getLoginUserDto().data.user.sex + "");
+        params.put("name",AccountUtil.getLoginUserDto().data.user.name);
+        params.put("photo",AccountUtil.getLoginUserDto().data.user.phone);
+        params.put("status",AccountUtil.getLoginUserDto().data.user.status+"");
+        String url = getUrl(params);
+        LogManager.e(url);
+        mX5WebView.loadUrl(url);
     }
 
     private void initEvents() {
@@ -130,5 +158,29 @@ public class BrowserActivity extends BaseToolBarActivity {
             default:
                 break;
         }
+    }
+
+    private String getUrl(HashMap<String, String> params) {
+        String url = URL;
+        // 添加url参数
+        if (params != null) {
+            Iterator<String> it = params.keySet().iterator();
+            StringBuffer sb = null;
+            while (it.hasNext()) {
+                String key = it.next();
+                String value = params.get(key);
+                if (sb == null) {
+                    sb = new StringBuffer();
+                    sb.append("?");
+                } else {
+                    sb.append("&");
+                }
+                sb.append(key);
+                sb.append("=");
+                sb.append(value);
+            }
+            url += sb.toString();
+        }
+        return url;
     }
 }
