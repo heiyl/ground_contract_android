@@ -4,13 +4,14 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,7 +43,7 @@ import cn.finalteam.toolsfinal.StringUtils;
 import okhttp3.Headers;
 import okhttp3.Response;
 
-public class MainActivity extends BaseMapActivity implements View.OnClickListener, SelectPopupWindow.WheelViewListener,MarketAdapter.RemoveMarketListener {
+public class MainActivity extends BaseMapActivity implements View.OnClickListener, SelectPopupWindow.WheelViewListener, MarketAdapter.RemoveMarketListener, RadioGroup.OnCheckedChangeListener {
 
     //流转区域视图
     @BindView(R.id.rl_location)
@@ -99,6 +100,12 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     @BindView(R.id.rv_view)
     RecyclerView rv_view;
 
+    @BindView(R.id.RadioGroup)
+    RadioGroup RadioGroup;
+
+    @BindView(R.id.RadioGroup_right)
+    RadioGroup RadioGroup_right;
+
     private MarketAdapter adapter;
 
     private long firstTime = 1;
@@ -123,11 +130,11 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     }
 
     @Override
-    protected void getOverlayArea(double area,boolean isHave) {
-        if(isHave){
+    protected void getOverlayArea(double area, boolean isHave) {
+        if (isHave) {
             tv_total_size.setVisibility(View.VISIBLE);
-            tv_total_size.setText("所选区域面积："+area +"亩");
-        }else{
+            tv_total_size.setText("所选区域面积：" + area + "亩");
+        } else {
             tv_total_size.setVisibility(View.GONE);
         }
     }
@@ -173,9 +180,9 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         });*/
 
         //权限控制
-        if (Build.VERSION.SDK_INT>=23){
+        if (Build.VERSION.SDK_INT >= 23) {
             showContacts();
-        }else{
+        } else {
             initLocation();
         }
 
@@ -186,17 +193,19 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         rl_select_type.setOnClickListener(this);
         tv_count.setOnClickListener(this);
         iv_add.setOnClickListener(this);
+        RadioGroup.setOnCheckedChangeListener(this);
+        RadioGroup_right.setOnCheckedChangeListener(this);
 
 //        setToolBarLeftTitleColor(R.color.colorAccent);
         setToolBarRightTitleColor(R.color.colorAccent);
-        initToolBarRightTxt(UIUtils.getString(R.string.title_main),"发布",new View.OnClickListener() {
+        initToolBarRightTxt(UIUtils.getString(R.string.title_main), "发布", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(canSubmit()){
+                if (canSubmit()) {
                     submit();
                 }
             }
-        },false);
+        }, false);
         /*initToolBarLeftRightTxt(UIUtils.getString(R.string.title_main), "注销", "发布", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,11 +221,11 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         });*/
     }
 
-    private void setLocationCount(){
-        if(locationInfoList != null && locationInfoList.size() > 0){
+    private void setLocationCount() {
+        if (locationInfoList != null && locationInfoList.size() > 0) {
             tv_count.setVisibility(View.VISIBLE);
             tv_count.setText("清除已添加的" + locationInfoList.size() + "个点");
-        }else{
+        } else {
             tv_count.setVisibility(View.GONE);
         }
         adapter.clearData();
@@ -312,9 +321,9 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     @Override
     public void getContent(String content) {
         //0:托管;1：流转
-        if("托管".equals(content)){
+        if ("托管".equals(content)) {
             type = 0;
-        }else{
+        } else {
             type = 1;
         }
         tv_select_type_content.setText(content);
@@ -322,15 +331,15 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.rl_select_type:
-                menuWindow = new SelectPopupWindow(activity, rlt_root,this);
+                menuWindow = new SelectPopupWindow(activity, rlt_root, this);
                 break;
             case R.id.tv_count:
                 showResetDialog();
                 break;
             case R.id.iv_add:
-                if(!UIUtils.isFastChangeClick()){
+                if (!UIUtils.isFastChangeClick()) {
                     setOverlay();
                     overlaySize();
                     setLocationCount();
@@ -339,38 +348,38 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         }
     }
 
-    private boolean canSubmit(){
-        if(StringUtils.isEmpty(country) || StringUtils.isEmpty(province) || StringUtils.isEmpty(city) || StringUtils.isEmpty(district)){
+    private boolean canSubmit() {
+        if (StringUtils.isEmpty(country) || StringUtils.isEmpty(province) || StringUtils.isEmpty(city) || StringUtils.isEmpty(district)) {
             UIUtils.showToastInCenter("定位失败，无法发布！");
             return false;
         }
         String townContent = edt_town_content.getText().toString();
         String townVillage = edt_village_content.getText().toString();
-        if(StringUtils.isEmpty(townContent) || StringUtils.isEmpty(townVillage)){
+        if (StringUtils.isEmpty(townContent) || StringUtils.isEmpty(townVillage)) {
             UIUtils.showToastInCenter("镇&村名称不能为空！");
             return false;
         }
-        if(type == -1){
+        if (type == -1) {
             UIUtils.showToastInCenter("未选择流转方式！");
             return false;
         }
 
         String sizeContent = edt_size_content.getText().toString();
-        if(StringUtils.isEmpty(sizeContent)){
+        if (StringUtils.isEmpty(sizeContent)) {
             UIUtils.showToastInCenter("土地面积不能为空！");
             return false;
         }
         String phoneContent = edt_phone_content.getText().toString();
-        if(StringUtils.isEmpty(phoneContent)){
+        if (StringUtils.isEmpty(phoneContent)) {
             UIUtils.showToastInCenter("手机号不能为空！");
             return false;
         }
         String nameContent = edt_name_content.getText().toString();
-        if(StringUtils.isEmpty(nameContent)){
+        if (StringUtils.isEmpty(nameContent)) {
             UIUtils.showToastInCenter("姓名不能为空！");
             return false;
         }
-        if(locationInfoList == null || locationInfoList.size() < 3){
+        if (locationInfoList == null || locationInfoList.size() < 3) {
             UIUtils.showToastInCenter("经纬度至少添加三个！");
             return false;
         }
@@ -380,12 +389,12 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     /**
      * 获取打点信息
      */
-    private String getLocationInfo(){
+    private String getLocationInfo() {
         String content = "";
-        if(locationInfoList != null&& locationInfoList.size() > 0){
+        if (locationInfoList != null && locationInfoList.size() > 0) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < locationInfoList.size(); i++) {
-                String singleContent =locationInfoList.get(i).getLatitude() + "," + locationInfoList.get(i).getLongitude();
+                String singleContent = locationInfoList.get(i).getLatitude() + "," + locationInfoList.get(i).getLongitude();
                 sb.append(singleContent);
                 if (i != locationInfoList.size() - 1) {
                     sb.append("\r\n");
@@ -396,7 +405,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         return content;
     }
 
-    protected void showResetDialog(){
+    protected void showResetDialog() {
         DialogUtils.getInstance().initSimpleDialog(activity, true)
                 .setTitle(UIUtils.getString(R.string.dialog_reset_title))
                 .setContent("当前添加的经纬度将被清除，您确定要重置经纬度吗？")
@@ -408,15 +417,17 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                     public void onSure() {
                         resetData();
                     }
+
                     @Override
                     public void onCancel() {
                     }
                 }).show();
     }
-    protected void showDelMarketDialog(final MarkerInfoUtil markerInfo, final Marker marker){
+
+    protected void showDelMarketDialog(final MarkerInfoUtil markerInfo, final Marker marker) {
         DialogUtils.getInstance().initSimpleDialog(activity, true)
                 .setTitle(UIUtils.getString(R.string.dialog_del_market_title))
-                .setContent("当前要删除的经纬度为:【" + markerInfo.getLatitude() + "," + markerInfo.getLongitude() + "】" )
+                .setContent("当前要删除的经纬度为:【" + markerInfo.getLatitude() + "," + markerInfo.getLongitude() + "】")
                 .setSureText(UIUtils.getString(R.string.dialog_sure))
                 .setCanceledOnTouchOutside(false)
 //                .setCancelable(false)
@@ -428,6 +439,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                         overlaySize();
                         setLocationCount();
                     }
+
                     @Override
                     public void onCancel() {
                     }
@@ -435,8 +447,8 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     }
 
     @Override
-    public void removeMarekt(MarkerInfoUtil markerInfoUtil,Marker marker) {
-        showDelMarketDialog(markerInfoUtil,marker);
+    public void removeMarekt(MarkerInfoUtil markerInfoUtil, Marker marker) {
+        showDelMarketDialog(markerInfoUtil, marker);
     }
 
     /**
@@ -444,8 +456,8 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
      *
      * @param view
      */
-    public void setMapMode(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
+    /*public void setMapMode(View view) {
+        boolean checked = ((AppCompatRadioButton) view).isChecked();
         switch (view.getId()) {
             case R.id.normal:
                 if (checked) {
@@ -460,14 +472,15 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
             default:
                 break;
         }
-    }
+    }*/
+
     /**
      * 设置底图显示模式
      *
      * @param view
      */
-    public void setMapLocationMode(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
+    /*public void setMapLocationMode(View view) {
+        boolean checked = ((AppCompatRadioButton) view).isChecked();
         switch (view.getId()) {
             case R.id.FOLLOWING:
                 if (checked) {
@@ -480,6 +493,24 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                 }
                 break;
             default:
+                break;
+        }
+    }*/
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case R.id.normal:
+                mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+                break;
+            case R.id.statellite:
+                mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+                break;
+            case R.id.FOLLOWING:
+                changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);
+                break;
+            case R.id.COMPASS:
+                changeLocationMode(MyLocationConfiguration.LocationMode.FOLLOWING);
                 break;
         }
     }

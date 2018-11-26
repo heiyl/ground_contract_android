@@ -397,7 +397,6 @@
                             android:checked="true"
                             android:drawableLeft="@drawable/map_radio_button_noraml"
                             android:drawablePadding="3dp"
-                            android:onClick="setMapMode"
                             android:text="普通" />
 
                         <android.support.v7.widget.AppCompatRadioButton
@@ -407,7 +406,6 @@
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/map_radio_button_satellite"
                             android:drawablePadding="3dp"
-                            android:onClick="setMapMode"
                             android:text="卫星" />
                     </RadioGroup>
 
@@ -436,7 +434,6 @@
                             android:checked="true"
                             android:drawableLeft="@drawable/map_radio_button_follow"
                             android:drawablePadding="3dp"
-                            android:onClick="setMapLocationMode"
                             android:text="跟随" />
 
                         <android.support.v7.widget.AppCompatRadioButton
@@ -446,7 +443,6 @@
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/map_radio_button_compass"
                             android:drawablePadding="3dp"
-                            android:onClick="setMapLocationMode"
                             android:text="罗盘" />
                     </RadioGroup>
                 </RelativeLayout>

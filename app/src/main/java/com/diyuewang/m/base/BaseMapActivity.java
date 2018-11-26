@@ -48,11 +48,13 @@ import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.finalteam.toolsfinal.StringUtils;
+
 public abstract class BaseMapActivity extends BaseToolBarActivity implements SensorEventListener {
 
     // 定位相关
     protected LocationClient mLocClient;
-//    protected final MyLocationListenner myListener = new MyLocationListenner();
+    //    protected final MyLocationListenner myListener = new MyLocationListenner();
     protected final MyBdLocationListenner myListener = new MyBdLocationListenner();
     protected LocationMode mCurrentMode;
     protected BitmapDescriptor mCurrentMarker;
@@ -64,6 +66,8 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     protected double mCurrentLat = 0.0;
     protected double mCurrentLon = 0.0;
     protected float mCurrentAccracy;
+
+    protected BDLocation mCurrentLocation;
 
     protected MyLocationData locData;
     protected boolean isFirstLoc = true; // 是否首次定位
@@ -103,7 +107,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);
     }
 
-    protected void initOverLay(){
+    protected void initOverLay() {
         MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(14.0f);
         mBaiduMap.setMapStatus(msu);
     }
@@ -111,7 +115,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     /**
      * 设置覆盖物
      */
-    protected void setOverlay(){
+    protected void setOverlay() {
         LatLng latLng = null;
         Marker marker;
         MarkerOptions options;
@@ -126,7 +130,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
 
 
         //获取经纬度
-        latLng = new LatLng(mCurrentLat,mCurrentLon);
+        latLng = new LatLng(mCurrentLat, mCurrentLon);
         //设置marker
         options = new MarkerOptions()
                 .position(latLng)//设置位置
@@ -151,11 +155,11 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     /**
      * 添加区域
      */
-    protected void overlaySize(){
+    protected void overlaySize() {
         List<LatLng> pts = new ArrayList<LatLng>();
-        if(locationInfoList != null && locationInfoList.size() >= 3){
+        if (locationInfoList != null && locationInfoList.size() >= 3) {
             removeOverlaySize();
-            for (int i = 0; i < locationInfoList.size(); i++){
+            for (int i = 0; i < locationInfoList.size(); i++) {
                 LatLng pt = new LatLng(locationInfoList.get(i).getLatitude(), locationInfoList.get(i).getLongitude());
                 pts.add(pt);
             }
@@ -170,25 +174,25 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
             double area = BDMapTools.getTotalArea(pts);
             double size = area / 667;
             double finalSize = Math.abs(size);
-            UIUtils.showToastInCenter("所选区域面积："+finalSize +"亩");
-            getOverlayArea(finalSize,true);
-        }else{
-            getOverlayArea(0,false);
+            UIUtils.showToastInCenter("所选区域面积：" + finalSize + "亩");
+            getOverlayArea(finalSize, true);
+        } else {
+            getOverlayArea(0, false);
             removeOverlaySize();
         }
 
     }
 
-    protected abstract void getOverlayArea(double area,boolean isHave);
+    protected abstract void getOverlayArea(double area, boolean isHave);
 
     private void removeOverlaySize() {
-        if(polygon != null){
+        if (polygon != null) {
             polygon.remove();
             polygon = null;
         }
     }
 
-    private BitmapDescriptor getOverIcon(String name){
+    private BitmapDescriptor getOverIcon(String name) {
         View markerView = LayoutInflater.from(this).inflate(R.layout.layout_market, null);
         TextView tv_name = (TextView) markerView.findViewById(R.id.tv_name);
         tv_name.setText(name);
@@ -260,6 +264,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
             if (location == null || mMapView == null) {
                 return;
             }
+            mCurrentLocation = location;
             mCurrentLat = location.getLatitude();
             mCurrentLon = location.getLongitude();
             mCurrentAccracy = location.getRadius();
@@ -284,6 +289,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         public void onReceivePoi(BDLocation poiLocation) {
         }
     }
+
     /**
      * 定位SDK监听函数
      */
@@ -305,9 +311,10 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                     .longitude(location.getLongitude()).build();
             mBaiduMap.setMyLocationData(locData);
             if (isFirstLoc) {
-                isFirstLoc = false;
-                setAdress(location);
-
+                if (!StringUtils.isEmpty(location.getCity())) {
+                    isFirstLoc = false;
+                    setAdress(location);
+                }
                 LatLng ll = new LatLng(location.getLatitude(),
                         location.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
@@ -319,7 +326,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     }
 
     private void getLocationType(BDLocation location) {
-        if (location.getLocType() == BDLocation.TypeGpsLocation){
+        if (location.getLocType() == BDLocation.TypeGpsLocation) {
 
             UIUtils.showToastInCenter("GPS: 卫星数为" + location.getSatelliteNumber());
             //当前为GPS定位结果，可获取以下信息
@@ -328,7 +335,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
             location.getAltitude();    //获取海拔高度信息，单位米
             location.getDirection();    //获取方向信息，单位度
 
-        } else if (location.getLocType() == BDLocation.TypeNetWorkLocation){
+        } else if (location.getLocType() == BDLocation.TypeNetWorkLocation) {
             UIUtils.showToastInCenter("NET: 运营商为" + location.getOperators());
             //当前为网络定位结果，可获取以下信息
             location.getOperators();    //获取运营商信息
@@ -391,7 +398,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     }
 
 
-    private void showPermissionDialog(){
+    private void showPermissionDialog() {
         DialogUtils.getInstance().initSimpleDialog(activity, false)
                 .setTitle(UIUtils.getString(R.string.dialog_permission_title))
                 .setContent("权限请求失败，是否去设置界面中打开地约的权限？")
@@ -409,6 +416,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                             activity.startActivity(settingIntent);
                         }
                     }
+
                     @Override
                     public void onCancel() {
                     }
@@ -416,19 +424,19 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     }
 
 
-    private static final int BAIDU_READ_PHONE_STATE =100;
+    private static final int BAIDU_READ_PHONE_STATE = 100;
 
-    public void showContacts(){
+    public void showContacts() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getApplicationContext(),"没有权限,请手动开启定位权限",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "没有权限,请手动开启定位权限", Toast.LENGTH_SHORT).show();
             // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
-            ActivityCompat.requestPermissions(activity,new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, BAIDU_READ_PHONE_STATE);
-        }else{
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION}, BAIDU_READ_PHONE_STATE);
+        } else {
             initLocation();
         }
     }
@@ -458,6 +466,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
 
     /**
      * 计算多边形面积
+     *
      * @return
      */
     protected double getArea(List<LatLng> pts) {
@@ -498,10 +507,10 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         double Radius = 6378137.0;// WGS84椭球半径
         int Count = pts.size();
         //最少3个点
-        if (Count  < 3) {
+        if (Count < 3) {
             return 0;
         }
-        for ( int i = 0; i < Count; i++) {
+        for (int i = 0; i < Count; i++) {
             if (i == 0) {
                 LowX = pts.get(Count - 1).longitude * Math.PI / 180;
                 LowY = pts.get(Count - 1).latitude * Math.PI / 180;
@@ -533,20 +542,20 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
             AH = Math.cos(HighY) * Math.cos(HighX);
             BH = Math.cos(HighY) * Math.sin(HighX);
             CH = Math.sin(HighY);
-            CoefficientL = (AM * AM + BM * BM + CM * CM)/ (AM * AL + BM * BL + CM * CL);
-            CoefficientH = (AM * AM + BM * BM + CM * CM)/ (AM * AH + BM * BH + CM * CH);
+            CoefficientL = (AM * AM + BM * BM + CM * CM) / (AM * AL + BM * BL + CM * CL);
+            CoefficientH = (AM * AM + BM * BM + CM * CM) / (AM * AH + BM * BH + CM * CH);
             ALtangent = CoefficientL * AL - AM;
             BLtangent = CoefficientL * BL - BM;
             CLtangent = CoefficientL * CL - CM;
             AHtangent = CoefficientH * AH - AM;
             BHtangent = CoefficientH * BH - BM;
             CHtangent = CoefficientH * CH - CM;
-            AngleCos = (AHtangent * ALtangent + BHtangent * BLtangent + CHtangent* CLtangent)/ (Math.sqrt(AHtangent * AHtangent + BHtangent* BHtangent
+            AngleCos = (AHtangent * ALtangent + BHtangent * BLtangent + CHtangent * CLtangent) / (Math.sqrt(AHtangent * AHtangent + BHtangent * BHtangent
 
-                    + CHtangent * CHtangent) * Math.sqrt(ALtangent * ALtangent + BLtangent* BLtangent + CLtangent * CLtangent));
+                    + CHtangent * CHtangent) * Math.sqrt(ALtangent * ALtangent + BLtangent * BLtangent + CLtangent * CLtangent));
             AngleCos = Math.acos(AngleCos);
             ANormalLine = BHtangent * CLtangent - CHtangent * BLtangent;
-            BNormalLine = 0 - (AHtangent * CLtangent - CHtangent* ALtangent);
+            BNormalLine = 0 - (AHtangent * CLtangent - CHtangent * ALtangent);
             CNormalLine = AHtangent * BLtangent - BHtangent * ALtangent;
             if (AM != 0)
                 OrientationValue = ANormalLine / AM;

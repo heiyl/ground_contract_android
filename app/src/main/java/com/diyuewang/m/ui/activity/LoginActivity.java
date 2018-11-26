@@ -133,12 +133,12 @@ public class LoginActivity extends BaseToolBarActivity implements View.OnClickLi
             case Constants.LOGIN_TYPE_NORMAL:
                 llt_normal_login.setVisibility(View.VISIBLE);
                 edtSmsCode.setVisibility(View.GONE);
-                tvChangeLogin.setText("员工登陆");
+                tvChangeLogin.setText("选择员工登陆");
                 break;
             case Constants.LOGIN_TYPE_CODE:
                 llt_normal_login.setVisibility(View.GONE);
                 edtSmsCode.setVisibility(View.VISIBLE);
-                tvChangeLogin.setText("短信登陆");
+                tvChangeLogin.setText("选择短信登陆");
                 break;
             default:
                 break;
