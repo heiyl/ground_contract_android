@@ -93,6 +93,7 @@
             android:windowSoftInputMode = "stateAlwaysHidden|adjustPan"/>
         <activity
             android:name=".ui.activity.LoginActivity"
+            android:theme="@style/Theme.AppStartLoadTranslucent"
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <activity
