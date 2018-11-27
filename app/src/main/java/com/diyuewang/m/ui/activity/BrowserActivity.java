@@ -2,7 +2,6 @@ package com.diyuewang.m.ui.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.view.KeyEvent;
@@ -15,14 +14,11 @@ import com.common.library.tools.status_bar.StatusBarUtil;
 import com.common.web_ibrary.customwebview.x5webview.X5WebView;
 import com.diyuewang.m.R;
 import com.diyuewang.m.base.BaseToolBarActivity;
-import com.diyuewang.m.constants.API;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.helper.AccountUtil;
 
 import java.util.HashMap;
 import java.util.Iterator;
-
-import cn.finalteam.okhttpfinal.RequestParams;
 
 
 /**

@@ -43,8 +43,10 @@ public class AccountUtil {
             BaseApplicaiton.loginUserDto = null;
             if(isMain){
                 ActivityStackManager.getInstance().finishToActivity(MainActivity.class, true);
+                ActivityStackManager.getInstance().finishActivity(MainActivity.class);
             }else{
                 ActivityStackManager.getInstance().finishToActivity(BrowserActivity.class, true);
+                ActivityStackManager.getInstance().finishActivity(BrowserActivity.class);
             }
             IntentManager.startLoginActivity(context);
         }
