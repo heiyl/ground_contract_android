@@ -36,12 +36,16 @@ import com.baidu.mapapi.map.Polygon;
 import com.baidu.mapapi.map.PolygonOptions;
 import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.common.library.tools.grant.PermissionsPageManager;
 import com.diyuewang.m.R;
 import com.diyuewang.m.model.MarkerInfoUtil;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.tools.helper.BDMapTools;
+import com.diyuewang.m.tools.helper.MapSizeTool;
+import com.diyuewang.m.ui.activity.LoginActivity;
+import com.diyuewang.m.ui.dialog.commonDialog.LoadingDialogClass;
 import com.diyuewang.m.ui.dialog.simpledialog.DialogUtils;
 import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
 
@@ -75,6 +79,8 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     protected BaiduMap mBaiduMap;
     protected List<MarkerInfoUtil> locationInfoList = new ArrayList<>();
 
+    protected boolean addMarking;
+
     BitmapDescriptor bd = BitmapDescriptorFactory
             .fromResource(R.mipmap.icon_gcoding);
     private Polygon polygon;
@@ -94,7 +100,8 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         mLocClient = new LocationClient(this);
         mLocClient.registerLocationListener(myListener);
         LocationClientOption option = new LocationClientOption();
-        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+//        option.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
+        option.setLocationMode(LocationClientOption.LocationMode.Device_Sensors);//只接受GPS定位
         option.setOpenGps(true); // 打开gps
         option.setPriority(LocationClientOption.GpsFirst); //设置gps优先
         option.setLocationNotify(true);//可选，默认false，设置是否当GPS有效时按照1S/1次频率输出GPS结果
@@ -122,6 +129,10 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         String name = (locationInfoList.size() + 1) + "";
 
         MarkerInfoUtil locationInfo = new MarkerInfoUtil();
+        if(mCurrentLocation != null){
+            mCurrentLat = mCurrentLocation.getLatitude();
+            mCurrentLon = mCurrentLocation.getLongitude();
+        }
         locationInfo.setLatitude(mCurrentLat);
         locationInfo.setLongitude(mCurrentLon);
         locationInfo.setName(name);
@@ -174,16 +185,21 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
             double area = BDMapTools.getTotalArea(pts);
             double size = area / 667;
             double finalSize = Math.abs(size);
+
+            double area2 = MapSizeTool.calculateArea(pts);
+            double size2 = area2 / 667;
+            double finalSize2 = Math.abs(size2);
+
             UIUtils.showToastInCenter("所选区域面积：" + finalSize + "亩");
-            getOverlayArea(finalSize, true);
+            getOverlayArea(finalSize,finalSize2, true);
         } else {
-            getOverlayArea(0, false);
+            getOverlayArea(0,0, false);
             removeOverlaySize();
         }
 
     }
 
-    protected abstract void getOverlayArea(double area, boolean isHave);
+    protected abstract void getOverlayArea(double area,double area2, boolean isHave);
 
     private void removeOverlaySize() {
         if (polygon != null) {
@@ -256,43 +272,6 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     /**
      * 定位SDK监听函数
      */
-    private class MyLocationListenner implements BDLocationListener {
-
-        @Override
-        public void onReceiveLocation(BDLocation location) {
-            // map view 销毁后不在处理新接收的位置
-            if (location == null || mMapView == null) {
-                return;
-            }
-            mCurrentLocation = location;
-            mCurrentLat = location.getLatitude();
-            mCurrentLon = location.getLongitude();
-            mCurrentAccracy = location.getRadius();
-            locData = new MyLocationData.Builder()
-                    .accuracy(location.getRadius())
-                    // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .direction(mCurrentDirection).latitude(location.getLatitude())
-                    .longitude(location.getLongitude()).build();
-            mBaiduMap.setMyLocationData(locData);
-            if (isFirstLoc) {
-                isFirstLoc = false;
-                setAdress(location);
-
-                LatLng ll = new LatLng(location.getLatitude(),
-                        location.getLongitude());
-                MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(ll).zoom(18.0f);
-                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-            }
-        }
-
-        public void onReceivePoi(BDLocation poiLocation) {
-        }
-    }
-
-    /**
-     * 定位SDK监听函数
-     */
     private class MyBdLocationListenner extends BDAbstractLocationListener {
 
         @Override
@@ -301,27 +280,53 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
             if (location == null || mMapView == null) {
                 return;
             }
-            mCurrentLat = location.getLatitude();
-            mCurrentLon = location.getLongitude();
-            mCurrentAccracy = location.getRadius();
-            locData = new MyLocationData.Builder()
-                    .accuracy(location.getRadius())
-                    // 此处设置开发者获取到的方向信息，顺时针0-360
-                    .direction(mCurrentDirection).latitude(location.getLatitude())
-                    .longitude(location.getLongitude()).build();
-            mBaiduMap.setMyLocationData(locData);
-            if (isFirstLoc) {
-                if (!StringUtils.isEmpty(location.getCity())) {
-                    isFirstLoc = false;
-                    setAdress(location);
+            if(addMarking){
+                //注意这里只接受gps点，需要在室外定位。
+                if (location.getLocType() == BDLocation.TypeGpsLocation) {
+                    BDLocation mostLocation = getMostAccuracyLocation(location);
+                    if(mostLocation != null){
+                        mCurrentLocation = mostLocation;
+                        addMarketReset();
+                        addMarket(mCurrentLocation);
+                    }
                 }
-                LatLng ll = new LatLng(location.getLatitude(),
-                        location.getLongitude());
-                MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(ll).zoom(18.0f);
-                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+            }else{
+                receiveLocation(location);
             }
 //            getLocationType(location);
+        }
+    }
+
+    protected void addMarketReset() {
+        addMarking = false;
+        last = new LatLng(0, 0);
+        points.clear();
+    }
+
+    /**
+     * 接收定位信息
+     * @param location
+     */
+    private void receiveLocation(BDLocation location) {
+        mCurrentLat = location.getLatitude();
+        mCurrentLon = location.getLongitude();
+        mCurrentAccracy = location.getRadius();
+        locData = new MyLocationData.Builder()
+                .accuracy(location.getRadius())
+                // 此处设置开发者获取到的方向信息，顺时针0-360
+                .direction(mCurrentDirection).latitude(location.getLatitude())
+                .longitude(location.getLongitude()).build();
+        mBaiduMap.setMyLocationData(locData);
+        if (isFirstLoc) {
+            if (!StringUtils.isEmpty(location.getCity())) {
+                isFirstLoc = false;
+                setAdress(location);
+            }
+            LatLng ll = new LatLng(location.getLatitude(),
+                    location.getLongitude());
+            MapStatus.Builder builder = new MapStatus.Builder();
+            builder.target(ll).zoom(18.0f);
+            mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         }
     }
 
@@ -362,6 +367,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     }
 
     protected abstract void setAdress(BDLocation location);
+    protected abstract void addMarket(BDLocation location);
 
     @Override
     protected void onPause() {
@@ -415,6 +421,23 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                             Intent settingIntent = PermissionsPageManager.getSettingIntent(activity);
                             activity.startActivity(settingIntent);
                         }
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+                }).show();
+    }
+    protected void showAddMarketDialog() {
+        DialogUtils.getInstance().initSimpleDialog(activity, false)
+                .setTitle("GPS信号接收中，请稍等...")
+                .setSureText(UIUtils.getString(R.string.dialog_cancle))
+                .setCanceledOnTouchOutside(false)
+                .setCancelable(false)
+                .setOnSimpleDialogClick(new SimpleDialog.OnSimpleDialogClick() {
+                    @Override
+                    public void onSure() {
+                        addMarketReset();
                     }
 
                     @Override
@@ -590,6 +613,39 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
 
 //        return String.valueOf(Math.floor(totalArea)); // 返回总面积
         return Math.floor(totalArea); // 返回总面积
+    }
+
+    /**
+     * 选一个精度相对较高的定位点
+     * 注意：如果一直显示gps信号弱，说明过滤的标准过高了，
+     你可以将location.getRadius()>25中的过滤半径调大，比如>40，
+     并且将连续5个点之间的距离DistanceUtil.getDistance(last, ll ) > 5也调大一点，比如>10，
+     这里不是固定死的，你可以根据你的需求调整，如果你的轨迹刚开始效果不是很好，你可以将半径调小，两点之间距离也调小，
+     gps的精度半径一般是10-50米
+     */
+    LatLng last = new LatLng(0, 0);//上一个定位点
+    List<LatLng> points = new ArrayList<LatLng>();//位置点集合
+    private BDLocation getMostAccuracyLocation(BDLocation location){
+
+        if (location.getRadius()>25) {//gps位置精度大于40米的点直接弃用
+            return null;
+        }
+
+        LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
+
+        if (DistanceUtil.getDistance(last, ll ) > 5) {
+            last = ll;
+            points.clear();//有任意连续两点位置大于10，重新取点
+            return null;
+        }
+        points.add(ll);
+        last = ll;
+        //有5个连续的点之间的距离小于10，认为gps已稳定，以最新的点为起始点
+        if(points.size() >= 5){
+            points.clear();
+            return location;
+        }
+        return null;
     }
 
 }

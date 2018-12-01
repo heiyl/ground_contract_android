@@ -477,7 +477,7 @@
         <TextView
             android:id="@+id/tv_total_size"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_23"
+            android:layout_height="wrap_content"
             android:background="@color/colorAccent"
             android:gravity="center"
             android:textColor="@color/white"
@@ -489,7 +489,6 @@
         android:layout_width="@dimen/dp_44"
         android:layout_height="@dimen/dp_44"
         android:layout_gravity="bottom"
-        android:alpha="0.6"
         android:layout_marginBottom="@dimen/dp_44"
         android:src="@mipmap/login_out"/>
 </FrameLayout>

@@ -19,7 +19,6 @@
         android:layout_width="@dimen/dp_44"
         android:layout_height="@dimen/dp_44"
         android:layout_alignParentBottom="true"
-        android:alpha="0.6"
         android:layout_marginBottom="@dimen/dp_44"
         android:src="@mipmap/login_out"/>
 

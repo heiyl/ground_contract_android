@@ -29,6 +29,7 @@ import com.diyuewang.m.model.MarkerInfoUtil;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.tools.helper.AccountUtil;
+import com.diyuewang.m.ui.activity.LoginActivity;
 import com.diyuewang.m.ui.adapter.MarketAdapter;
 import com.diyuewang.m.ui.dialog.SelectPopupWindow;
 import com.diyuewang.m.ui.dialog.commonDialog.LoadingDialogClass;
@@ -134,10 +135,10 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     }
 
     @Override
-    protected void getOverlayArea(double area, boolean isHave) {
+    protected void getOverlayArea(double area,double area2, boolean isHave) {
         if (isHave) {
             tv_total_size.setVisibility(View.VISIBLE);
-            tv_total_size.setText("所选区域面积：" + area + "亩");
+            tv_total_size.setText("所选区域面积：" + area + "亩" + "\n算法2计算面积：" + area2 + "亩");
         } else {
             tv_total_size.setVisibility(View.GONE);
         }
@@ -159,6 +160,15 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
         city = location.getCity();//获取城市
         district = location.getDistrict();//获取区县
         tv_location_content.setText(city + " " + district);
+    }
+
+    @Override
+    protected void addMarket(BDLocation location) {
+        DialogUtils.getInstance().initSimpleDialog(activity, false).dismiss();
+        setOverlay();
+        overlaySize();
+        setLocationCount();
+        mCurrentLocation = null;
     }
 
     private void initMap() {
@@ -352,9 +362,9 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                 break;
             case R.id.iv_add:
                 if (!UIUtils.isFastChangeClick()) {
-                    setOverlay();
-                    overlaySize();
-                    setLocationCount();
+                    showAddMarketDialog();
+//                    LoadingDialogClass.showLodDialog(activity, "GPS信号接收中，请稍等...");
+                    addMarking = true;
                 }
                 break;
         }
@@ -462,52 +472,6 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     public void removeMarekt(MarkerInfoUtil markerInfoUtil, Marker marker) {
         showDelMarketDialog(markerInfoUtil, marker);
     }
-
-    /**
-     * 设置底图显示模式
-     *
-     * @param view
-     */
-    /*public void setMapMode(View view) {
-        boolean checked = ((AppCompatRadioButton) view).isChecked();
-        switch (view.getId()) {
-            case R.id.normal:
-                if (checked) {
-                    mBaiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-                }
-                break;
-            case R.id.statellite:
-                if (checked) {
-                    mBaiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
-                }
-                break;
-            default:
-                break;
-        }
-    }*/
-
-    /**
-     * 设置底图显示模式
-     *
-     * @param view
-     */
-    /*public void setMapLocationMode(View view) {
-        boolean checked = ((AppCompatRadioButton) view).isChecked();
-        switch (view.getId()) {
-            case R.id.FOLLOWING:
-                if (checked) {
-                    changeLocationMode(MyLocationConfiguration.LocationMode.NORMAL);
-                }
-                break;
-            case R.id.COMPASS:
-                if (checked) {
-                    changeLocationMode(MyLocationConfiguration.LocationMode.FOLLOWING);
-                }
-                break;
-            default:
-                break;
-        }
-    }*/
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
