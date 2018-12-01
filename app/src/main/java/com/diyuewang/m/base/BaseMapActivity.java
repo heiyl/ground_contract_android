@@ -290,6 +290,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                         mCurrentLocation = mostLocation;
                         addMarketReset();
                         addMarket(mCurrentLocation);
+                        getLocationType(mostLocation);
                     }
                 }
             }else{
@@ -631,13 +632,13 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
     List<LatLng> points = new ArrayList<LatLng>();//位置点集合
     private BDLocation getMostAccuracyLocation(BDLocation location){
 
-        if (location.getRadius()>25) {//gps位置精度大于40米的点直接弃用
+        if (location.getRadius()>10) {//gps位置精度大于40米的点直接弃用
             return null;
         }
 
         LatLng ll = new LatLng(location.getLatitude(), location.getLongitude());
 
-        if (DistanceUtil.getDistance(last, ll ) > 5) {
+        if (DistanceUtil.getDistance(last, ll ) > 2) {
             last = ll;
             points.clear();//有任意连续两点位置大于10，重新取点
             return null;
