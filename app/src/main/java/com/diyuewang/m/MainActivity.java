@@ -164,7 +164,6 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
 
     @Override
     protected void addMarket(BDLocation location) {
-        DialogUtils.getInstance().initSimpleDialog(activity, false).dismiss();
         setOverlay();
         overlaySize();
         setLocationCount();

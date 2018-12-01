@@ -287,6 +287,17 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                 if (location.getLocType() == BDLocation.TypeGpsLocation) {
                     BDLocation mostLocation = getMostAccuracyLocation(location);
                     if(mostLocation != null){
+                        if (locationInfoList != null && locationInfoList.size() > 0) {
+                            MarkerInfoUtil markerInfoUtil =locationInfoList.get(locationInfoList.size() - 1);
+                            LatLng last = new LatLng(markerInfoUtil.getLatitude(), markerInfoUtil.getLongitude());
+                            LatLng ll = new LatLng(mostLocation.getLatitude(), mostLocation.getLongitude());
+
+                            if (DistanceUtil.getDistance(last, ll ) < 2) {//距离上次打的点小于2米就放弃打点
+                                addMarketReset();
+                                mCurrentLocation = null;
+                                return;
+                            }
+                        }
                         mCurrentLocation = mostLocation;
                         addMarketReset();
                         addMarket(mCurrentLocation);
@@ -304,6 +315,7 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
         addMarking = false;
         last = new LatLng(0, 0);
         points.clear();
+        DialogUtils.getInstance().initSimpleDialog(activity, false).dismiss();
     }
 
     /**
