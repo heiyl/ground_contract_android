@@ -40,6 +40,7 @@ import com.baidu.mapapi.utils.DistanceUtil;
 import com.common.library.tools.grant.PermissionsPageManager;
 import com.diyuewang.m.R;
 import com.diyuewang.m.model.MarkerInfoUtil;
+import com.diyuewang.m.tools.BuglyErrorManager;
 import com.diyuewang.m.tools.LogManager;
 import com.diyuewang.m.tools.UIUtils;
 import com.diyuewang.m.tools.helper.BDMapTools;
@@ -52,6 +53,7 @@ import com.diyuewang.m.ui.dialog.simpledialog.SimpleDialog;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.finalteam.toolsfinal.DeviceUtils;
 import cn.finalteam.toolsfinal.StringUtils;
 
 public abstract class BaseMapActivity extends BaseToolBarActivity implements SensorEventListener {
@@ -318,6 +320,8 @@ public abstract class BaseMapActivity extends BaseToolBarActivity implements Sen
                 .longitude(location.getLongitude()).build();
         mBaiduMap.setMyLocationData(locData);
         if (isFirstLoc) {
+            String imei = DeviceUtils.getIMEI(activity);
+            BuglyErrorManager.postIMEIError(imei);
             if (!StringUtils.isEmpty(location.getCity())) {
                 isFirstLoc = false;
                 setAdress(location);
