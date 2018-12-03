@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatRadioButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -110,6 +111,9 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     @BindView(R.id.iv_logout)
     ImageView ivLogOUt;
 
+    @BindView(R.id.iv_input)
+    ImageView ivInput;
+
 
     private MarketAdapter adapter;
 
@@ -138,7 +142,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     protected void getOverlayArea(double area,double area2, boolean isHave) {
         if (isHave) {
             tv_total_size.setVisibility(View.VISIBLE);
-            tv_total_size.setText("所选区域面积：" + area + "亩" + "\n算法2计算面积：" + area2 + "亩");
+            tv_total_size.setText("所选区域面积：" + area + "亩");// + "\n算法2计算面积：" + area2 + "亩"
         } else {
             tv_total_size.setVisibility(View.GONE);
         }
@@ -207,6 +211,12 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
             @Override
             public void onClick(View v) {
                 showLogOUtDialog(true);
+            }
+        });
+        ivInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showIputMarketDialog();
             }
         });
 
@@ -459,6 +469,39 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
                         marker.remove();
                         overlaySize();
                         setLocationCount();
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+                }).show();
+    }
+    protected void showIputMarketDialog() {
+        View content = LayoutInflater.from(activity).inflate(R.layout.dialog_input_market, null);
+        final AppCompatEditText edtJingdu = content.findViewById(R.id.edt_jingdu);
+        final AppCompatEditText edtWeidu = content.findViewById(R.id.edt_weidu);
+        DialogUtils.getInstance().initSimpleDialog(activity, true)
+                .setTitle(UIUtils.getString(R.string.dialog_input_market_title))
+                .setView(content)
+                .setSureText(UIUtils.getString(R.string.dialog_sure))
+                .setCanceledOnTouchOutside(false)
+//                .setCancelable(false)
+                .setOnSimpleDialogClick(new SimpleDialog.OnSimpleDialogClick() {
+                    @Override
+                    public void onSure() {
+                        String jingdu = edtJingdu.getText().toString().trim();
+                        String weidu = edtWeidu.getText().toString().trim();
+                        if(!StringUtils.isEmpty(jingdu) && !StringUtils.isEmpty(weidu)){
+                            double longitude = Double.parseDouble(jingdu);
+                            double latitude = Double.parseDouble(weidu);
+                            BDLocation location = new BDLocation();
+                            location.setLatitude(latitude);
+                            location.setLongitude(longitude);
+                            mCurrentLocation = location;
+                            addMarket(location);
+                        }else{
+                            UIUtils.showToastInCenter("经纬度信息不能为空！");
+                        }
                     }
 
                     @Override

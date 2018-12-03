@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edt_jingdu"
+        android:hint="请输入经度"
+        android:textColor="@color/tool_title_color"
+        android:inputType="numberDecimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_5"/>
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/edt_weidu"
+        android:hint="请输入纬度"
+        android:textColor="@color/tool_title_color"
+        android:inputType="numberDecimal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_15"/>
+</LinearLayout>

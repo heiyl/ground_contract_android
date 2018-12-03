@@ -111,6 +111,17 @@ public class SimpleDialog {
 
         return this;
     }
+    public SimpleDialog setView(View layout) {
+//        if (dialog != null && dialogView != null) {
+//            ((TextView) dialogView.findViewById(R.id.dialog_exit_content)).setText(content);
+//        }
+        if (builder != null) {
+            builder.setView(layout);
+
+        }
+
+        return this;
+    }
 
     public SimpleDialog setSureText(@NonNull String sureText) {
 //        if (dialog != null && dialogView != null) {

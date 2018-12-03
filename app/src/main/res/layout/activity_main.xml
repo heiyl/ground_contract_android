@@ -477,7 +477,7 @@
         <TextView
             android:id="@+id/tv_total_size"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/dp_23"
             android:background="@color/colorAccent"
             android:gravity="center"
             android:textColor="@color/white"
@@ -491,4 +491,12 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/dp_44"
         android:src="@mipmap/login_out"/>
+    <ImageView
+        android:id="@+id/iv_input"
+        android:layout_width="@dimen/dp_44"
+        android:layout_height="@dimen/dp_44"
+        android:padding="@dimen/dp_3"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="100dp"
+        android:src="@mipmap/input_market"/>
 </FrameLayout>
