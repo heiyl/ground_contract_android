@@ -142,7 +142,7 @@ public class MainActivity extends BaseMapActivity implements View.OnClickListene
     protected void getOverlayArea(double area,double area2, boolean isHave) {
         if (isHave) {
             tv_total_size.setVisibility(View.VISIBLE);
-            tv_total_size.setText("所选区域面积：" + area + "亩");// + "\n算法2计算面积：" + area2 + "亩"
+            tv_total_size.setText("所选区域面积：" + area + "亩" + "\n算法2计算面积：" + area2 + "亩");// + "\n算法2计算面积：" + area2 + "亩"
         } else {
             tv_total_size.setVisibility(View.GONE);
         }

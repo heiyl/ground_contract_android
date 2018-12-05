@@ -16,8 +16,12 @@ public class MapSizeTool {
         List<double[]> pointFList = new ArrayList<>();
         for (int i = 0; i < latLngLines.size(); i++) {
             LatLng latLng = latLngLines.get(i);
+
+            //把百度坐标系转换为WGS84坐标系
+            Gps gps = PositionUtil.bd09_To_Gps84(latLng.latitude,latLng.longitude);
             //经纬度转换成平面直角坐标系
-            pointFList.add(WGS2flat(latLng.longitude, latLng.latitude));
+            pointFList.add(WGS2flat(gps.getWgLon(), gps.getWgLat()));
+//            pointFList.add(WGS2flat(latLng.longitude, latLng.latitude));
         }
 
         int iCycle, iCount;
